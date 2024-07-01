@@ -1,0 +1,132 @@
+
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+	</head>
+	<body>
+		<div th:fragment="inputField">
+			<div class="text-slate-600 text-sm font-semibold mb-1 ml-1"> <p th:text="${label}"></p></div>
+			<input type="text" th:name=${name} th:id=${name} class="px-2 py-1.5 rounded text-sm border-0 
+				shadow-lg focus:ring w-full" th:placeholder=${name} />
+		</div>
+		
+		<div th:fragment="inputEmailField">
+			<div class="text-slate-600 text-sm font-semibold mb-1 ml-1"> <p th:text="${label}"></p></div>
+			<input type="email" th:name=${name} th:id=${name} class="px-2 py-1.5 rounded text-sm border-0 
+				shadow-lg focus:ring w-full" th:placeholder=${label} />
+		</div>
+		
+		<div th:fragment="inputMobileField" class="flex flex-wrap">
+			<div class="text-slate-600 text-sm font-semibold mb-1 ml-1 w-full">Mobile number</div>
+			<div th:replace="layouts/fragments/intlTelInput :: intlTelInput"></div>
+			<input type="text" name="mobileNumber" id="mobileNumber" maxlength="10"
+				class="inline px-2 py-1.5 rounded text-sm border-0 shadow-lg focus:ring w-4/6" placeholder="Enter mobile number"/>
+		</div>
+		
+		<div th:fragment="inputNumberField">
+			<div class="text-slate-600 text-sm font-semibold mb-1 ml-1"> <p th:text="${label}"></p></div>
+			<input type="number" th:name=${name} th:id=${name} class="px-2 py-1.5 rounded text-sm border-0 
+				shadow-lg focus:ring w-full" th:placeholder=${label} />
+		</div>
+		
+		<div th:fragment="inputPasswordField">
+			<div class="text-slate-600 text-sm font-semibold mb-1 ml-1"> <p th:text="${label}"></p></div>
+			<input type="password" th:name=${name} th:id=${name} class="px-2 py-1.5 rounded text-sm border-0 
+				shadow-lg focus:ring w-full" th:placeholder=${label} />
+		</div>
+		
+		<div th:fragment="inputDateTimeField">
+			<div class="text-slate-600 text-sm font-semibold mb-1 ml-1"> <p th:text="${label}"></p></div>
+			<input type="datetime-local" th:name=${name} th:id=${name} class="px-2 py-1.5 rounded text-sm border-0 
+				shadow-lg focus:ring w-full" th:placeholder=${label} />
+		</div>
+		
+		<div th:fragment="inputFileField">
+			<div class="text-slate-600 text-sm font-semibold mb-1 ml-1"> <p th:text="${label}"></p></div>
+			<input type="file" th:name=${name} th:id=${name} class="bg-white px-2 py-1.5 rounded text-sm border-0 
+				shadow-lg focus:ring w-full" th:placeholder=${label} />
+		</div>
+		
+		<div th:fragment="inputRequiredFileField">
+			<div class="text-slate-600 text-sm font-semibold mb-1 ml-1"> <p th:text="${label}"></p></div>
+			<input type="file" th:name=${name} th:id=${name} class="bg-white px-2 py-1.5 rounded text-sm border-0 
+				shadow-lg focus:ring w-full" th:placeholder=${label} required/>
+		</div>
+		
+		<div th:fragment="textField">
+			<div class="text-slate-600 text-sm font-semibold mb-1 ml-1"> <p th:text="${label}"></p></div>
+			<textarea type="text" th:name=${name} th:id=${name} class="px-2 py-1.5 rounded text-sm border-0 
+				shadow-lg focus:ring w-full h-20" th:placeholder=${label} ></textarea>
+		</div>
+		
+		<div th:fragment="selectBooleanField">
+			<div class="text-slate-600 text-sm font-semibold mb-1 ml-1"><p th:text="${label}"></p></div>
+			<select th:name=${name} class="px-2 py-1.5 rounded text-sm border-0 
+				shadow-lg focus:ring w-full">
+			  <option value="" selected>Any</option>
+			  <option value="true">true</option>
+			  <option value="false">false</option>
+			</select>
+		</div>
+		
+		<div th:fragment="inputEmailOrPhoneField">
+			<div id="emailBox" >
+				<div class="text-slate-600 text-sm font-semibold mb-1 ml-1" >Email or Mobile number</div>
+				<input type="email" name="email" id="email" class="px-2 py-1.5 rounded text-sm border-0 shadow-lg focus:ring w-full"
+					placeholder="Enter email or mobile number" autofocus required/>
+			</div>
+			<div id="mobileBox" class="hidden flex flex-wrap">
+				<div class="text-slate-600 text-sm font-semibold mb-1 ml-1 w-full">Email or Mobile number</div>
+				<div th:replace="layouts/fragments/intlTelInput :: intlTelInput"></div>
+				<input type="text" name="mobileNumber" id="mobileNumber" maxlength="10"
+					class="px-2 py-1.5 rounded text-sm border-0 shadow-lg focus:ring w-4/6" placeholder="Enter email or mobile number"/>
+			</div>
+		</div>
+		
+		<div th:fragment="toggleButtonChecked">
+			<div class="text-slate-600 text-sm font-semibold mb-1 ml-1"><p th:text="${label}"></p></div>
+			<div class="flex items-center w-full">
+			  <label th:for=${id} class="flex items-center cursor-pointer">
+			    <div class="relative">
+			      <input type="checkbox" th:name=${name} th:id=${id} class="sr-only" value="true" checked>
+			      <div class="dotbg block bg-gray-400 w-14 h-8 rounded-full"></div>
+			      <div class="dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition"></div>
+			    </div>
+			  </label>
+			</div>
+		</div>
+
+		<div th:fragment="toggleButton">
+			<div class="text-slate-600 text-sm font-semibold mb-1 ml-1"><p th:text="${label}"></p></div>
+			<div class="flex items-center w-full">
+				<label class="flex items-center cursor-pointer">
+					<div class="relative">
+						<input type="checkbox" th:name=${name} class="sr-only" value="true">
+						<div class="dotbg block bg-gray-400 w-14 h-8 rounded-full"></div>
+						<div class="dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition"></div>
+					</div>
+				</label>
+			</div>
+		</div>
+		
+		<button th:fragment="buttonPrimaryFull" type="submit" class="bg-primary-500 hover:bg-primary-400 text-white text-md font-bold py-1 px-4 border-b-4 
+				border-primary-700 hover:border-primary-500 rounded-full w-full">
+			<span th:text="${name}"/>
+		</button>
+		
+		<button th:fragment="buttonSecondaryFull" type="button" class="bg-secondary-500 hover:bg-secondary-400 text-white text-md font-bold py-1 px-4 border-b-4 
+				border-secondary-500 hover:border-secondary-500 rounded-full w-full" th:attr="onclick=|${function}|">
+			<span th:text="${name}"/>
+		</button>
+		
+		<button th:fragment="buttonGreenFull" type="button" class="bg-green-700 hover:bg-green-600 text-white text-md font-bold py-1 px-4 border-b-4 
+				border-green-800 hover:border-green-700 rounded-full w-full" th:attr="onclick=|${function}|">
+			<span th:text="${name}"/>
+		</button>
+		
+		<button th:fragment="buttonDelete" type="button" class="bg-red-600 hover:bg-red-500 text-white text-md font-bold py-1 px-4 border-b-4
+				border-red-800 hover:border-red-600 rounded-full" th:attr="onclick=|${function}|">
+			<span th:text="${name}"/>
+		</button>
+		
+	</body>
+</html>

@@ -1,0 +1,78 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+
+</head>
+<body>
+
+	<div th:fragment="alertPopup">
+	
+		<div class="fixed overflow-y-auto top-0 w-full left-0 hidden z-40" id="alertPopup">
+		  <div class="flex items-center justify-center min-height-100vh pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+		    <div class="fixed inset-0 transition-opacity">
+		      <div class="absolute inset-0 bg-gray-900 opacity-75" />
+		    </div>
+		    <div class="inline-block align-center bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all
+		    	my-24 mx-auto align-middle max-w-lg flex flex-col" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
+		    	
+		      	<div class="modal-header py-5 flex justify-center items-center">
+		     		
+		     	</div>
+		    	<div class="modal-body overflow-y-auto max-h-48 py-5">
+		    		<div id="alertMessage" class="text-xl text-center"></div>
+		    	</div>
+		    	<div class="modal-footer flex justify-center items-center py-5 grid gap-6 grid-cols-1 lg:grid-cols-3 ">
+		    	   <div></div>
+				   <div th:replace="~{layouts/fragments/formElements :: buttonSecondaryFull(name='Close')}"></div>
+		      	</div>
+		    </div>
+		  </div>
+		</div>
+	
+	</div>
+	
+	<div th:fragment="deletePopup">
+	
+		<div class="fixed overflow-y-auto top-0 w-full left-0 hidden z-30" id="deletePopup">
+		  <div class="flex items-center justify-center min-height-100vh pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+		    <div class="fixed inset-0 transition-opacity">
+		      <div class="absolute inset-0 bg-gray-900 opacity-75" />
+		    </div>
+		    <div class="inline-block align-center bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all 
+		    	my-48 mx-auto align-middle max-w-lg flex flex-col" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
+		    	
+		      	<div class="modal-header pt-5 flex justify-center items-center">
+		     		<i class="fas fa-5x fa-times-circle text-red-600"></i>
+		     	</div>
+		    	<div class="modal-body flex justify-center items-center overflow-y-auto py-5">
+		    		<div id="deleteMessage" class="text-xl text-center">
+		    			Are you sure you want to delete?
+		    		</div>
+		    	</div>
+		    	<div class="modal-footer flex justify-center items-center pb-5 grid gap-6 grid-cols-4">
+		    	   <div></div>
+				   <div th:replace="~{layouts/fragments/formElements :: buttonRedFull(name='Yes', id='deleteConfirmButton')}"></div>
+				   <div th:replace="~{layouts/fragments/formElements :: buttonSecondaryFull(name='No', function='$(\'#deletePopup\').toggleClass(\'hidden\');')}"></div>
+		      	</div>
+		    </div>
+		  </div>
+		</div>
+	    
+	</div>
+	
+	<div th:fragment="mainPopup">
+	    <!-- Modal -->
+		<div class="fixed overflow-y-auto top-0 w-full left-0 hidden z-20" id="mainPopup">
+			<div class="flex items-center justify-center min-height-100vh pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+			    <div class="fixed inset-0 transition-opacity">
+			      <div class="absolute inset-0 bg-gray-900 opacity-75" />
+			    </div>
+			    <div id="mainModal" class="inline-block align-center bg-white rounded-lg text-left overflow-y-auto shadow-xl transform transition-all 
+		    		my-8 mx-auto align-middle max-w-4xl max-h-90vh mx-12 lg:mx-auto flex flex-col" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
+			    </div>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

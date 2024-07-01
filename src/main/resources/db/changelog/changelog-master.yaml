@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: test
+      author: pradeep
+      changes:
+        - sql:
+            sql: create schema if not exists wishlist
+  #- include:
+      #file: db/changelog/sql/create-wishlist-table.sql

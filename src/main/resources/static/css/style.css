@@ -1,0 +1,181 @@
+@import "animate.css";
+
+:root {
+	--bs-bodyBackground: rgba(41, 48, 66, 0.15),
+	--bs-bodyColor: rgba(41, 48, 66, 0),
+	
+	--bs-sideNavBackground: #555555,
+	--bs-sideNavColor: #EDEDED,
+	--bs-sideNavHoverBackground: #999999,
+	--bs-sideNavHoverColor: #ffffff,
+	
+	--bs-PrimaryColor: #0E1576,
+	
+	--bs-font-sans-serif: "Poppins", -apple-system, BlinkMacSystemFont,
+		"Segoe UI", "Helvetica Neue", Arial, sans-serif; 
+	--bs-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas,
+		"Liberation Mono", "Courier New", monospace; 
+	--bs-gradient: linear-gradient(180deg, rgba(41, 48, 66, 0.15),
+		rgba(41, 48, 66, 0))
+}
+
+body {
+	-webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+	background: var(--bs-bodyBackground);
+	color: var(--bs-bodyColor);
+	font-size: .825rem;
+    font-weight: 400;
+    line-height: 1.625;
+}
+
+.max-h-90vh {
+	max-height: 90vh;
+}
+/**************************************** Spinner Section - Start *****************************************/
+@-webkit-keyframes spin {
+	0% {transform: scale(1) rotate(360deg);}
+	50% {transform: scale(.5) rotate(-360deg);}
+	100% {transform: scale(1) rotate(360deg);}
+}
+@keyframes spin {
+	0% {transform: scale(1) rotate(360deg);}
+	50% {transform: scale(.5) rotate(-360deg);}
+	100% {transform: scale(1) rotate(360deg);}
+}
+#loader, #loader1, #loader2, #loader3, #loader4, #loader5 {
+	display:none;
+}
+#loader-big {
+    position:fixed;
+    width:100%;
+    left:0;right:0;top:0;bottom:0;
+    background: rgba(255,255,255,0.7);
+    z-index:10000;
+}
+#loader-big::after {
+    content:'';
+    display:block;
+    position:absolute;
+    /* left:48%;top:40%; */
+    width:4rem;height:4rem;
+    border: 0.5rem solid #162534;
+	border-radius: 50%;
+	/* border-top-color: #09f;
+	border-bottom-color: #09f; */
+    -webkit-animation: spin 5s linear infinite;
+    animation: spin 5s linear infinite;
+}
+#loader-small {
+    position:fixed;
+    width:100%;
+    left:0;right:0;top:0;bottom:0;
+    z-index:10000;
+}
+#loader-small::after {
+    content:'';
+    display:block;
+    position:absolute;
+   /*  left:48%;top:45%; */
+    width: 3rem; height: 3rem;
+    border: 1.5rem solid #162534;
+	border-radius: 50%;
+	border-left-color: #09f;
+	border-right-color: #09f;
+    -webkit-animation: spin 5s linear infinite;
+    animation: spin 5s linear infinite;
+}
+/***************************************** Spinner Section - End *****************************************/
+
+/***************************************** Scroller Section - Start *****************************************/
+::-webkit-scrollbar {
+    width: 12px;
+}
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px #0B105B;
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background: #DEDEDE;
+    -webkit-box-shadow: inset 0 0 6px #0B105B;
+}
+/***************************************** Scroller Section - end *****************************************/
+
+/***************************************** Form Input - start *****************************************/
+
+.invalid-tooltip {
+	background: transparent;
+	color: red;
+	/**'position: absolute;**/
+    top: 2.7rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+input:checked ~ .dot {
+  transform: translateX(100%);
+  background-color: #1926D1;
+}
+
+input:checked ~ .dotbg {
+  background-color: #C4C7F8;
+}
+
+/***************************************** Data Table - Start *****************************************/
+.table {
+	display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+.table thead {
+	background: #0E1576;
+	color: #EDEDED;
+}
+.table thead th {
+	padding: 0.5rem 2rem;
+}
+
+.table tbody {
+	background: #F8FAFC;
+	color: #333333;
+}
+
+.table tbody td {
+	padding: 0.2rem 2rem;
+	text-align: center;
+	border-color: #0E1576 !important;
+}
+
+.table thead th span{
+	color: var(--bs-tableHeaderColor);
+} 
+.table tbody td {
+	background: var(--bs-tableBackground);
+	color: var(--bs-tableColor);
+}
+.table tbody td span {
+	color: var(--bs-tableColor);
+}
+.table thead th+.cell-width{
+	min-width: 10rem;
+}
+.table td.td-action {
+	padding: 0.25rem;
+}
+.table .btn-action {
+	width: 1rem !important;
+	min-width: 0px !important;
+	border-radius: 0.2rem !important;
+	height: 1.5rem !important;
+	margin-top: 0.2rem;
+}
+.table .btn-action i {
+    position: relative;
+    top: -0.35rem;
+    right: 0.43rem;
+}
+.table .btn-primary.btn-action i {
+    right: 0.52rem !important;
+}
+/***************************************** Data Table - End *****************************************/
+

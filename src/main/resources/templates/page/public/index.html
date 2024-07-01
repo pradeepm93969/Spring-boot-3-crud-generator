@@ -1,0 +1,132 @@
+<div id="page-title-value" class="hidden">
+    Spring boot - Crud Generator
+</div>
+
+<section class="animated bounceIn p-5 relative bg-slate-50 min-h-full">
+
+    <div th:replace="~{layouts/fragments/loader :: loader}"></div>
+
+    <div class="flex flex-col container w-screen mb-6 shadow-lg rounded-lg bg-slate-200 border-1">
+        <div class="rounded-t bg-slate-300 text-slate-900 mb-0 px-6 py-3 text-base font-semibold">
+            Crud Generator
+        </div>
+        <form id="crudGeneratorForm" name="crudGeneratorForm" onsubmit="handleCrudGeneration();return false;" method="POST">
+            <div class="grid gap-6 grid-cols-1 sm:grid-cols-2 m-5">
+                <div th:replace="~{layouts/fragments/formElements :: inputField(label='Entity Name', name='entityName')}"></div>
+            </div>
+            <div class="grid gap-6 grid-cols-1 sm:grid-cols-2 m-5">
+                <div th:replace="~{layouts/fragments/formElements :: inputField(label='Directory', name='directory')}"></div>
+                <div th:replace="~{layouts/fragments/formElements :: inputField(label='Package Name', name='packageName')}"></div>
+            </div>
+            <div class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 m-5">
+                <div th:replace="~{layouts/fragments/formElements :: inputField(label='JPA Package Name', name='jpaPackageName')}"></div>
+                <div th:replace="~{layouts/fragments/formElements :: inputField(label='Table Prefix', name='tablePrefix')}"></div>
+                <div th:replace="~{layouts/fragments/formElements :: toggleButtonChecked(label='Generate Audit Section', name='generateAuditSection')}"></div>
+            </div>
+            <div class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 m-5 mb-10">
+                <div th:replace="~{layouts/fragments/formElements :: toggleButtonChecked(label='Generate Liquibase', name='generateLiquibase')}"></div>
+                <div id="liquibaseAuditorNameField">
+                    <div th:replace="~{layouts/fragments/formElements :: inputField(label='Liquibase Auditor Name', name='liquibaseAuditorName')}"></div>
+                </div>
+                <div id="databaseSchemaField">
+                    <div th:replace="~{layouts/fragments/formElements :: inputField(label='Database Schema', name='databaseSchema')}"></div>
+                </div>
+            </div>
+
+            <div class="bg-slate-300 text-slate-900 mb-0 px-6 py-3 my-5 text-base font-semibold">
+                Properties
+            </div>
+
+            <div id="properties-container">
+                <div class="properties-block rounded bg-slate-100 text-slate-900 mb-0 px-6 py-3 m-5 text-base font-semibold">
+                    <div class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 m-5">
+                        <div class="nameField">
+                            <div th:replace="~{layouts/fragments/formElements :: inputField(label='Name', name='name')}"></div>
+                        </div>
+                        <div class="col-span-2 idField">
+                            <div th:replace="~{layouts/fragments/formElements :: toggleButton(label='ID', name='id', id='id')}"></div>
+                        </div>
+                        <div class="col-span-1 flex justify-end">
+                            <div th:replace="~{layouts/fragments/formElements :: buttonDelete(name='Delete', function='deletePropertyBlock(this)')}"></div>
+                        </div>
+                        <!-- Use classes instead of IDs -->
+                        <div class="parentTypeField">
+                            <div class="text-slate-600 text-sm font-semibold mb-1 ml-1">Parent Type</div>
+                            <select name="parentType" class="px-2 py-1.5 rounded text-sm border-0 shadow-lg focus:ring w-full">
+                                <option value=""></option>
+                                <option value="List">List</option>
+                                <option value="Map">Map</option>
+                            </select>
+                        </div>
+                        <div class="typeField">
+                            <div class="text-slate-600 text-sm font-semibold mb-1 ml-1">Type</div>
+                            <select name="type" class="px-2 py-1.5 rounded text-sm border-0 shadow-lg focus:ring w-full" id="typeSelector">
+                                <option value="String">String</option>
+                                <option value="Integer">Integer</option>
+                                <option value="Long">Long</option>
+                                <option value="BigDecimal">BigDecimal</option>
+                                <option value="MonetaryAmount">MonetaryAmount</option>
+                                <option value="Boolean">Boolean</option>
+                                <option value="Enum">Enum</option>
+                                <option value="OffsetDateTime">OffsetDateTime</option>
+                                <option value="Phone">Phone</option>
+                            </select>
+                        </div>
+                        <div class="columnLengthField field-to-hide string-fields">
+                            <div th:replace="~{layouts/fragments/formElements :: inputField(label='Column Length', name='columnLength')}"></div>
+                        </div>
+                        <div class="col-span-1 flex justify-around dbField">
+                            <div th:replace="~{layouts/fragments/formElements :: toggleButton(label='Required', name='required', id='required')}"></div>
+                            <div th:replace="~{layouts/fragments/formElements :: toggleButton(label='Unique', name='unique', id='unique')}"></div>
+                            <div th:replace="~{layouts/fragments/formElements :: toggleButton(label='Indexable', name='indexable', id='indexable')}"></div>
+                        </div>
+                    </div>
+                    <div class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 m-5 mb-10">
+                        <div class="enumValuesField field-to-hide">
+                            <div th:replace="~{layouts/fragments/formElements :: inputField(label='Enum Values', name='enumValues')}"></div>
+                        </div>
+                        <div class="emailField field-to-hide string-fields">
+                            <div th:replace="~{layouts/fragments/formElements :: toggleButton(label='Email', name='email', id='email')}"></div>
+                        </div>
+                        <div class="patternField field-to-hide string-fields">
+                            <div th:replace="~{layouts/fragments/formElements :: inputField(label='Pattern', name='pattern')}"></div>
+                        </div>
+                        <div class="minField field-to-hide string-fields">
+                            <div th:replace="~{layouts/fragments/formElements :: inputField(label='Min', name='min')}"></div>
+                        </div>
+                        <div class="maxField field-to-hide string-fields">
+                            <div th:replace="~{layouts/fragments/formElements :: inputField(label='Max', name='max')}"></div>
+                        </div>
+                        <div class="precisionField field-to-hide">
+                            <div th:replace="~{layouts/fragments/formElements :: inputField(label='Precision', name='precision')}"></div>
+                        </div>
+                        <div class="scaleField field-to-hide">
+                            <div th:replace="~{layouts/fragments/formElements :: inputField(label='Scale', name='scale')}"></div>
+                        </div>
+                        <div class="col-span-2 flex justify-around numericValidation field-to-hide">
+                            <div th:replace="~{layouts/fragments/formElements :: toggleButton(label='Positive', name='positive', id='positive')}"></div>
+                            <div th:replace="~{layouts/fragments/formElements :: toggleButton(label='Positive or Zero', name='positiveOrZero', id='positiveOrZero')}"></div>
+                            <div th:replace="~{layouts/fragments/formElements :: toggleButton(label='Negative', name='negative', id='negative')}"></div>
+                            <div th:replace="~{layouts/fragments/formElements :: toggleButton(label='Negative or Zero', name='negativeOrZero', id='negativeOrZero')}"></div>
+                        </div>
+                        <div class="col-span-2 flex justify-around temporalValidation field-to-hide">
+                            <div th:replace="~{layouts/fragments/formElements :: toggleButton(label='Future', name='future', id='future')}"></div>
+                            <div th:replace="~{layouts/fragments/formElements :: toggleButton(label='Future or Present', name='futureOrPresent', id='futureOrPresent')}"></div>
+                            <div th:replace="~{layouts/fragments/formElements :: toggleButton(label='Past', name='past', id='past')}"></div>
+                            <div th:replace="~{layouts/fragments/formElements :: toggleButton(label='Past or Present', name='pastOrPresent')}"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 m-5 mt-10">
+                <div></div>
+                <div th:replace="~{layouts/fragments/formElements :: buttonPrimaryFull(name='Generate')}"></div>
+                <div th:replace="~{layouts/fragments/formElements :: buttonSecondaryFull(name='Clear', function='clearForm()')}"></div>
+                <div th:replace="~{layouts/fragments/formElements :: buttonGreenFull(name='Add New Property', function='addProperty()')}"></div>
+            </div>
+
+        </form>
+    </div>
+
+</section>
