@@ -207,6 +207,8 @@ public class EntityGeneratorService {
         if (content.contains(" MonetaryAmount "))
             entityFile.append("import javax.money.MonetaryAmount;\n");
         entityFile.append("import java.io.Serializable;\n");
+        if (content.contains(" Set<"))
+            entityFile.append("import java.util.Set;\n");
         if (content.contains(" List<"))
             entityFile.append("import java.util.List;\n");
         if (content.contains(" Map<"))

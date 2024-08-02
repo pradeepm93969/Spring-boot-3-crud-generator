@@ -89,6 +89,8 @@ public class DomainGeneratorService {
         if (content.contains(" MonetaryAmount "))
             file.append("import javax.money.MonetaryAmount;\n");
         file.append("import java.io.Serializable;\n");
+        if (content.contains(" Set<"))
+            file.append("import java.util.Set;\n");
         if (content.contains(" List<"))
             file.append("import java.util.List;\n");
         if (content.contains(" BigDecimal"))

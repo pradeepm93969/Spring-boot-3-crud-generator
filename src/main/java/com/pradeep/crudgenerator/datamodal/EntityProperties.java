@@ -17,7 +17,7 @@ public class EntityProperties {
     @Pattern(regexp = "^[a-zA-Z_$][a-zA-Z0-9_$]*$")
     private String name;
 
-    @Pattern(regexp = "List|Map")
+    @Pattern(regexp = "Set|List|Map")
     private String ParentType;
 
     @NotBlank
