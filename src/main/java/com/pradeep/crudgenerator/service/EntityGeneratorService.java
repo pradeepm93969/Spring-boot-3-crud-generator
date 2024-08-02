@@ -90,6 +90,35 @@ public class EntityGeneratorService {
                 entityClass.append("            this.set").append(propertyName)
                         .append("(domain.get").append(propertyName).append("().getNumber().numberValue(BigDecimal.class));\n");
                 entityClass.append("        }\n");
+            } else if (StringUtils.isNotBlank(property.getParentType())
+                    && property.getType().equalsIgnoreCase("Enum")) {
+
+                String enumClassName = CrudStringUtils.capitalizeFirstLetter(property.getName()) + "Enum";
+
+                if (property.getParentType().equals("Set")) {
+                    entityClass.append("        if (domain.get").append(propertyName).append("() != null && !domain.get")
+                            .append(propertyName).append("().isEmpty()) {\n");
+                    entityClass.append("            this.set").append(propertyName)
+                            .append("(domain.get").append(propertyName).append("().stream()")
+                            .append(".map(\n                ").append(enumClassName).append("::name)")
+                            .append(".collect(Collectors.toSet()));\n");
+                    entityClass.append("        }\n");
+                } else if (property.getParentType().equals("List")) {
+                    entityClass.append("        if (domain.get").append(propertyName).append("() != null && !domain.get")
+                            .append(propertyName).append("().isEmpty()) {\n");
+                    entityClass.append("            this.set").append(propertyName)
+                            .append("(domain.get").append(propertyName).append("().stream()")
+                            .append(".map(\n                ").append(enumClassName).append("::name)")
+                            .append(".collect(Collectors.toList()));\n");
+                    entityClass.append("        }\n");
+                } else if (property.getParentType().equals("Map")) {
+                    entityClass.append("        if (domain.get").append(propertyName).append("() != null && !domain.get")
+                            .append(propertyName).append("().isEmpty()) {\n");
+                    entityClass.append("            this.set").append(propertyName)
+                            .append("(domain.get").append(propertyName).append("().entrySet().stream()")
+                            .append(".collect(\n                Collectors.toMap(Map.Entry::getKey, e -> e.getValue().name())));\n");
+                    entityClass.append("        }\n");
+                }
             } else {
                 entityClass.append("        this.set").append(propertyName).append("(domain.get")
                         .append(propertyName).append("());\n");
@@ -117,6 +146,36 @@ public class EntityGeneratorService {
                         .append("(Money.of(this.get").append(propertyName).append(
                                 "(), domain.getCurrency()));\n");
                 entityClass.append("        }\n");
+            } else if (StringUtils.isNotBlank(property.getParentType())
+                    && property.getType().equalsIgnoreCase("Enum")) {
+
+                String enumClassName = CrudStringUtils.capitalizeFirstLetter(property.getName()) + "Enum";
+
+                if (property.getParentType().equals("Set")) {
+                    entityClass.append("        if (this.get").append(propertyName).append("() != null && !this.get")
+                            .append(propertyName).append("().isEmpty()) {\n");
+                    entityClass.append("            domain.set").append(propertyName)
+                            .append("(this.get").append(propertyName).append("().stream()")
+                            .append(".map(\n                s -> ").append(enumClassName).append(".valueOf(s))")
+                            .append(".collect(Collectors.toSet()));\n");
+                    entityClass.append("        }\n");
+                } else if (property.getParentType().equals("List")) {
+                    entityClass.append("        if (this.get").append(propertyName).append("() != null && !this.get")
+                            .append(propertyName).append("().isEmpty()) {\n");
+                    entityClass.append("            domain.set").append(propertyName)
+                            .append("(this.get").append(propertyName).append("().stream()")
+                            .append(".map(\n                s -> ").append(enumClassName).append(".valueOf(s))")
+                            .append(".collect(Collectors.toList()));\n");
+                    entityClass.append("        }\n");
+                } else if (property.getParentType().equals("Map")) {
+                    entityClass.append("        if (this.get").append(propertyName).append("() != null && !this.get")
+                            .append(propertyName).append("().isEmpty()) {\n");
+                    entityClass.append("            domain.set").append(propertyName)
+                            .append("(this.get").append(propertyName).append("().entrySet().stream()")
+                            .append(".collect(\n                Collectors.toMap(Map.Entry::getKey, e -> ").append(enumClassName)
+                            .append(".valueOf(e.getValue()))));\n");
+                    entityClass.append("        }\n");
+                }
             } else {
                 entityClass.append("        domain.set").append(propertyName).append("(this.get")
                         .append(propertyName).append("());\n");
@@ -304,7 +363,7 @@ public class EntityGeneratorService {
                 field.append("String").append(", ");
             }
             if (property.getType().equalsIgnoreCase("Enum")) {
-                field.append(CrudStringUtils.capitalizeFirstLetter(property.getName()) + "Enum").append("> ");
+                field.append("String").append("> ");
             } else {
                 field.append(property.getType()).append("> ");
             }
@@ -320,7 +379,16 @@ public class EntityGeneratorService {
         enumClassBuilder.append("package ").append(request.getPackageName()).append(".domain.support;\n\n");
         enumClassBuilder.append("public enum ").append(CrudStringUtils.capitalizeFirstLetter(property.getName()))
                 .append("Enum").append(" {\n\n");
-        enumClassBuilder.append("    ").append(property.getEnumValues()).append("\n\n");
+
+        String[] enumValues = property.getEnumValues().split(",");
+        for (int i = 0; i < enumValues.length; i++) {
+            enumClassBuilder.append("    ").append(enumValues[i].trim().toUpperCase());
+            if (i < enumValues.length - 1) {
+                enumClassBuilder.append(",");
+            }
+            enumClassBuilder.append("\n");
+        }
+
         enumClassBuilder.append("}");
         FileUtils.writeFile(enumClassBuilder.toString(), filePath);
     }

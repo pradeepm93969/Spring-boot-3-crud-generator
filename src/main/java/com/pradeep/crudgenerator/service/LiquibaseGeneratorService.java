@@ -30,10 +30,10 @@ public class LiquibaseGeneratorService {
             sqlFile.append("    CURRENCY VARCHAR(3) NOT NULL,\n");
         }
         if (request.isGenerateAuditSection()) {
-            sqlFile.append("    audit_creation_time TIMESTAMP NULL,\n");
-            sqlFile.append("    audit_creator VARCHAR(60) NULL,\n");
-            sqlFile.append("    audit_update_time TIMESTAMP NULL,\n");
-            sqlFile.append("    audit_updater VARCHAR(60) NULL,\n");
+            sqlFile.append("    CREATED_AT TIMESTAMP NULL,\n");
+            sqlFile.append("    CREATED_BY VARCHAR(60) NULL,\n");
+            sqlFile.append("    UPDATED_AT TIMESTAMP NULL,\n");
+            sqlFile.append("    UPDATED_BY VARCHAR(60) NULL,\n");
         }
 
         request.getProperties().stream()
