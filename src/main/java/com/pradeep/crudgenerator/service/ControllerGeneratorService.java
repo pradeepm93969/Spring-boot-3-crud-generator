@@ -32,6 +32,7 @@ public class ControllerGeneratorService {
         generateGetByIdMethod(controllerClass, request);
         generateCreateMethod(controllerClass, request);
         generateUpdateMethod(controllerClass, request);
+        generatePatchMethod(controllerClass, request);
         generateDeleteByIdMethod(controllerClass, request);
         
         controllerClass.append("}");
@@ -117,6 +118,24 @@ public class ControllerGeneratorService {
         controllerClass.append("    }\n\n");
     }
 
+    private void generatePatchMethod(StringBuilder controllerClass, CRUDGenerationRequest request) {
+        controllerClass.append("    @PatchMapping(\"/{id}\")\n");
+        controllerClass.append("    @PreAuthorize(\"hasAnyAuthority('ROLE_MANAGE_")
+                .append(CrudStringUtils.convertCamelToSnake(request.getEntityName()))
+                .append("','ROLE_ADMIN')\")\n");
+        controllerClass.append("    public ResponseEntity<").append(request.getEntityName())
+                .append("> patch(@PathVariable(\"id\")\n");
+        controllerClass.append("            @NotBlank(message = \"id is mandatory\") ")
+                .append("String id,\n");
+        controllerClass.append("            @RequestBody Map<String, Object> request) {\n");
+        controllerClass.append("        ").append(request.getEntityName()).append(" response = get")
+                .append(request.getEntityName())
+                .append("Service().patch(id, request);\n");
+        controllerClass.append("        return new ResponseEntity<>(response, HttpStatus.OK);\n");
+        controllerClass.append("    }\n\n");
+    }
+
+
     private void generateDeleteByIdMethod(StringBuilder controllerClass, CRUDGenerationRequest request) {
         controllerClass.append("    @DeleteMapping(\"/{id}\")\n");
         controllerClass.append("    @ResponseStatus(HttpStatus.NO_CONTENT)\n");
@@ -150,10 +169,13 @@ public class ControllerGeneratorService {
         controllerClass.append("import org.springframework.web.bind.annotation.PathVariable;\n");
         controllerClass.append("import org.springframework.web.bind.annotation.PostMapping;\n");
         controllerClass.append("import org.springframework.web.bind.annotation.PutMapping;\n");
+        controllerClass.append("import org.springframework.web.bind.annotation.PatchMapping;\n");
         controllerClass.append("import org.springframework.web.bind.annotation.RequestBody;\n");
         controllerClass.append("import org.springframework.web.bind.annotation.RequestMapping;\n");
         controllerClass.append("import org.springframework.web.bind.annotation.RequestParam;\n");
         controllerClass.append("import org.springframework.web.bind.annotation.ResponseStatus;\n");
         controllerClass.append("import org.springframework.web.bind.annotation.RestController;\n\n");
+
+        controllerClass.append("import java.util.Map;\n\n");
     }
 }

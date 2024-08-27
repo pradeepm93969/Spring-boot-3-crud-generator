@@ -2,6 +2,17 @@ spring:
   application:
     name: Spring-boot-3-crud-generator
   datasource:
+#    url: 'jdbc:postgresql://localhost:5432/ecommerce?currentSchema=ecommerce'
+#    driverClassName: org.postgresql.Driver
+#    username: ecommerce
+#    password: demo
+#    hikari:
+#      pool-name: app
+#      maximum-pool-size: 25
+#      minimum-idle: 5
+#      max-lifetime: 1800000
+#      idle-timeout: 600000
+#      connection-timeout: 60000
     url: jdbc:h2:mem:testdb
     driverClassName: org.h2.Driver
     username: sa
@@ -9,7 +20,9 @@ spring:
   liquibase:
     enabled: true
     change-log: "classpath:/db/changelog/changelog-master.yaml"
-    liquibase-schema: liquibase
+    liquibase-schema: public
+
+
 
 server:
   port: 9999
