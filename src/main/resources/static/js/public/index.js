@@ -88,7 +88,7 @@ function init() {
                 case 'Enum':
                     $propertiesBlock.find('.columnLengthField, .enumValuesField').removeClass('hidden');
                     break;
-                case 'OffsetDateTime':
+                case 'Instant':
                     $propertiesBlock.find('.temporalValidation').removeClass('hidden');
                     break;
                 default:

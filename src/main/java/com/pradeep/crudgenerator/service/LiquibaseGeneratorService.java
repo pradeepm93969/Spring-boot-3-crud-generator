@@ -111,7 +111,7 @@ public class LiquibaseGeneratorService {
             case "boolean":
                 field.append("BOOLEAN");
                 break;
-            case "offsetdatetime":
+            case "instant":
                 field.append("TIMESTAMP");
                 break;
             case "bigdecimal":

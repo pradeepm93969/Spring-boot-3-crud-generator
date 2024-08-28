@@ -1,4 +1,4 @@
-package com.pradeep.crudgenerator.common.money;
+package com.pradeep.crudgenerator.common.jackson;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.ObjectCodec;

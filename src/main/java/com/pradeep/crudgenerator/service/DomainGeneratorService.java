@@ -4,10 +4,16 @@ import com.pradeep.crudgenerator.datamodal.CRUDGenerationRequest;
 import com.pradeep.crudgenerator.datamodal.EntityProperties;
 import com.pradeep.crudgenerator.utils.CrudStringUtils;
 import com.pradeep.crudgenerator.utils.FileUtils;
+import jakarta.persistence.Column;
 import jakarta.validation.Valid;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.List;
 
 @Service
@@ -31,8 +37,10 @@ public class DomainGeneratorService {
             domainClass.append("    private CurrencyUnit currency = Monetary.getCurrency(\"USD\");\n\n");
         }
         if (request.isGenerateAuditSection()) {
-            domainClass.append("    @Builder.Default\n");
-            domainClass.append("    private AuditSection auditSection = new AuditSection();\n");
+            domainClass.append("    private Instant createdAt;\n");
+            domainClass.append("    private Instant updatedAt;\n");
+            domainClass.append("    private String createdBy;\n");
+            domainClass.append("    private String updatedBy;\n");
         }
         domainClass.append("\n}");
 
@@ -97,8 +105,8 @@ public class DomainGeneratorService {
             file.append("import java.math.BigDecimal;\n");
         if (content.contains(" Map<"))
             file.append("import java.util.Map;\n");
-        if (content.contains(" OffsetDateTime"))
-            file.append("import java.time.OffsetDateTime;\n");
+        if (content.contains(" Instant"))
+            file.append("import java.time.Instant;\n");
         if (content.contains("@JsonProperty"))
             file.append("import com.fasterxml.jackson.annotation.JsonProperty;\n");
         if (content.contains("Phone"))
@@ -107,9 +115,6 @@ public class DomainGeneratorService {
             file.append("import javax.money.CurrencyUnit;\n");
         if (content.contains(" Monetary"))
             file.append("import javax.money.Monetary;\n");
-
-        if (content.contains("AuditSection"))
-            file.append("import ").append(request.getJpaPackageName()).append(".audit.AuditSection;\n");
 
         request.getProperties().stream().filter(p -> p.getType().equalsIgnoreCase("Enum")).forEach(
                 fp -> {
@@ -208,7 +213,7 @@ public class DomainGeneratorService {
                 field.append("    @NegativeOrZero\n");
             }
 
-        }  else if (property.getType().equalsIgnoreCase("TimeStamp")) {
+        }  else if (property.getType().equalsIgnoreCase("Instant")) {
             if (property.isFuture()) {
                 field.append("    @Future\n");
             }

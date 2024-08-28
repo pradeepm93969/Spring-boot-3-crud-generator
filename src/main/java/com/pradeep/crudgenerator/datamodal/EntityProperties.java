@@ -21,7 +21,7 @@ public class EntityProperties {
     private String ParentType;
 
     @NotBlank
-    @Pattern(regexp = "String|Integer|Long|BigDecimal|MonetaryAmount|Boolean|Enum|OffsetDateTime|Phone")
+    @Pattern(regexp = "String|Integer|Long|BigDecimal|MonetaryAmount|Boolean|Enum|Instant|Phone")
     private String Type;
 
     private String enumValues;

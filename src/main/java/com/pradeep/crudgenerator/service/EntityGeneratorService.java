@@ -25,11 +25,7 @@ public class EntityGeneratorService {
         }
         generateTableAnnotation(request, entityClass);
         entityClass.append("public class Jpa").append(
-                request.getEntityName()).append(" implements Serializable");
-        if (request.isGenerateAuditSection()) {
-            entityClass.append(", Auditable");
-        }
-        entityClass.append(" {\n\n");
+                request.getEntityName()).append(" implements Serializable {\n\n");
 
         entityClass.append("    private static final long serialVersionUID = 1L;\n\n");
 
@@ -45,8 +41,21 @@ public class EntityGeneratorService {
         }
 
         if (request.isGenerateAuditSection()) {
-            entityClass.append("    @Embedded\n");
-            entityClass.append("    private AuditSection auditSection = new AuditSection();\n\n");
+            entityClass.append("    @CreatedDate\n");
+            entityClass.append("    @Column(name = \"CREATED_AT\", columnDefinition = \"TIMESTAMP\", nullable = false, updatable = false)\n");
+            entityClass.append("    private Instant createdAt;\n\n");
+
+            entityClass.append("    @LastModifiedDate\n");
+            entityClass.append("    @Column(name = \"UPDATED_AT\", columnDefinition = \"TIMESTAMP\")\n");
+            entityClass.append("    private Instant updatedAt;\n\n");
+
+            entityClass.append("    @CreatedBy\n");
+            entityClass.append("    @Column(name = \"CREATED_BY\", nullable = false, updatable = false)\n");
+            entityClass.append("    private String createdBy;\n\n");
+
+            entityClass.append("    @LastModifiedBy\n");
+            entityClass.append("    @Column(name = \"UPDATED_BY\", nullable = false)\n");
+            entityClass.append("    private String updatedBy;\n\n");
         }
 
         generateFromMeMethod(entityClass, request);
@@ -181,6 +190,12 @@ public class EntityGeneratorService {
                         .append(propertyName).append("());\n");
             }
         });
+        if (request.isGenerateAuditSection()) {
+            entityClass.append("        domain.setCreatedAt(this.getCreatedAt());\n");
+            entityClass.append("        domain.setCreatedBy(this.getCreatedBy());\n");
+            entityClass.append("        domain.setUpdatedAt(this.getUpdatedAt());\n");
+            entityClass.append("        domain.setUpdatedBy(this.getUpdatedBy());\n");
+        }
         entityClass.append("        return domain;\n");
         entityClass.append("    }\n\n");
     }
@@ -242,8 +257,6 @@ public class EntityGeneratorService {
                 request.getEntityName()).append(";\n");
         if (content.contains("@Convert"))
             entityFile.append("import jakarta.persistence.Convert;\n");
-        if (content.contains("@Embedded"))
-            entityFile.append("import jakarta.persistence.Embedded;\n");
         entityFile.append("import jakarta.persistence.Entity;\n");
         if (content.contains("@EntityListeners"))
             entityFile.append("import jakarta.persistence.EntityListeners;\n");
@@ -260,8 +273,13 @@ public class EntityGeneratorService {
         if (content.contains("SqlTypes"))
             entityFile.append("import org.hibernate.type.SqlTypes;\n");
 
-        if (content.contains("AuditingEntityListener.class"))
+        if (request.isGenerateAuditSection()) {
             entityFile.append("import org.springframework.data.jpa.domain.support.AuditingEntityListener;\n");
+            entityFile.append("import org.springframework.data.annotation.CreatedBy;\n");
+            entityFile.append("import org.springframework.data.annotation.CreatedDate;\n");
+            entityFile.append("import org.springframework.data.annotation.LastModifiedBy;\n");
+            entityFile.append("import org.springframework.data.annotation.LastModifiedDate;\n");
+        }
 
         if (content.contains(" MonetaryAmount "))
             entityFile.append("import javax.money.MonetaryAmount;\n");
@@ -272,8 +290,8 @@ public class EntityGeneratorService {
             entityFile.append("import java.util.List;\n");
         if (content.contains(" Map<"))
             entityFile.append("import java.util.Map;\n");
-        if (content.contains(" OffsetDateTime"))
-            entityFile.append("import java.time.OffsetDateTime;\n");
+        if (content.contains(" Instant"))
+            entityFile.append("import java.time.Instant;\n");
         if (content.contains(" BigDecimal"))
             entityFile.append("import java.math.BigDecimal;\n");
         if (content.contains(" CurrencyUnit"))
@@ -283,10 +301,6 @@ public class EntityGeneratorService {
         if (content.contains("Money."))
             entityFile.append("import org.javamoney.moneta.Money;\n");
 
-        if (content.contains("Auditable"))
-            entityFile.append("import ").append(request.getJpaPackageName()).append(".audit.Auditable;\n");
-        if (content.contains("AuditSection"))
-            entityFile.append("import ").append(request.getJpaPackageName()).append(".audit.AuditSection;\n");
         if (content.contains("Phone"))
             entityFile.append("import ").append(request.getJpaPackageName()).append(".domain.Phone;\n");
 
@@ -309,7 +323,7 @@ public class EntityGeneratorService {
             field.append("    @GeneratedValue\n");
         }
         field.append("    @Column(name = \"").append(CrudStringUtils.convertCamelToSnake(property.getName()));
-        if (property.getType().equalsIgnoreCase("OffsetDateTime")) {
+        if (property.getType().equalsIgnoreCase("Instant")) {
             field.append("\", columnDefinition = \"TIMESTAMP\"");
         } else if (property.getType().equalsIgnoreCase("BigDecimal") ||
                 property.getType().equalsIgnoreCase("MonetaryAmount")) {
