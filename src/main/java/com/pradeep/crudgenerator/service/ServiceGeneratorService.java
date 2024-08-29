@@ -69,7 +69,8 @@ public class ServiceGeneratorService {
                 .append("> spec = null;\n");
         serviceClass.append("        if (StringUtils.isNotBlank(rsql)) {\n");
         serviceClass.append("            Node rootNode = new RSQLParser().parse(rsql);\n");
-        serviceClass.append("            spec = rootNode.accept(new CustomRsqlVisitor<JpaClient>());\n");
+        serviceClass.append("            spec = rootNode.accept(new " +
+                "CustomRsqlVisitor<Jpa").append(request.getEntityName()).append(">());\n");
         serviceClass.append("        }\n");
         serviceClass.append("        Page<Jpa").append(request.getEntityName())
                 .append("> page = get").append(request.getEntityName())
