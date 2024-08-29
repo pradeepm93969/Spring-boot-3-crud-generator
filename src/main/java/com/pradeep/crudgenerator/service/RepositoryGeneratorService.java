@@ -15,7 +15,10 @@ public class RepositoryGeneratorService {
                 .append(StringUtils.isNotBlank(request.getSubPackageName()) ? "."
                         + request.getSubPackageName() : "")
                 .append(";\n\n");
-        repositoryClass.append("import ").append(request.getPackageName()).append(".jpa.domain.Jpa")
+        repositoryClass.append("import ").append(request.getPackageName()).append(".jpa.domain")
+                .append(StringUtils.isNotBlank(request.getSubPackageName()) ? "."
+                        + request.getSubPackageName() : "")
+                .append(".Jpa")
                 .append(request.getEntityName()).append(";\n");
         repositoryClass.append("import org.springframework.data.jpa.repository.JpaRepository;\n");
         repositoryClass.append("import org.springframework.data.jpa.repository.JpaSpecificationExecutor;\n\n");
