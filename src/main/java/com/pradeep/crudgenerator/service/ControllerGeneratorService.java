@@ -3,6 +3,7 @@ package com.pradeep.crudgenerator.service;
 import com.pradeep.crudgenerator.datamodal.CRUDGenerationRequest;
 import com.pradeep.crudgenerator.utils.CrudStringUtils;
 import com.pradeep.crudgenerator.utils.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -10,7 +11,10 @@ public class ControllerGeneratorService {
     public void generateController(CRUDGenerationRequest request) {
         StringBuilder controllerClass = new StringBuilder();
 
-        controllerClass.append("package ").append(request.getPackageName()).append(".web.endpoint;\n\n");
+        controllerClass.append("package ").append(request.getPackageName()).append(".web.endpoint")
+                .append(StringUtils.isNotBlank(request.getSubPackageName()) ? "."
+                        + request.getSubPackageName() : "")
+                .append(";\n\n");
 
         generateImports(controllerClass, request);
 
@@ -38,7 +42,10 @@ public class ControllerGeneratorService {
         controllerClass.append("}");
 
         // Write request class to file
-        String filePath = request.getDirectory() + "\\web\\endpoint\\" + request.getEntityName() + "Endpoint.java";
+        String filePath = request.getDirectory() + "\\web\\endpoint"
+                + (StringUtils.isNotBlank(request.getSubPackageName()) ? "\\"
+                + request.getSubPackageName() : "")
+                + "\\" + request.getEntityName() + "Endpoint.java";
         FileUtils.writeFile(controllerClass.toString(), filePath);
 
     }
@@ -149,10 +156,16 @@ public class ControllerGeneratorService {
     }
 
     private void generateImports(StringBuilder controllerClass, CRUDGenerationRequest request) {
-        controllerClass.append("import ").append(request.getPackageName()).append(".domain.").append(
-                request.getEntityName()).append(";\n");
-        controllerClass.append("import ").append(request.getPackageName()).append(".service.").append(
-                request.getEntityName()).append("Service;\n");
+        controllerClass.append("import ").append(request.getPackageName()).append(".domain")
+                .append(StringUtils.isNotBlank(request.getSubPackageName()) ? "."
+                        + request.getSubPackageName() : "")
+                .append(".")
+                .append(request.getEntityName()).append(";\n");
+        controllerClass.append("import ").append(request.getPackageName()).append(".service")
+                .append(StringUtils.isNotBlank(request.getSubPackageName()) ? "."
+                        + request.getSubPackageName() : "")
+                .append(".")
+                .append(request.getEntityName()).append("Service;\n");
         controllerClass.append("import io.swagger.v3.oas.annotations.security.SecurityRequirement;\n");
         controllerClass.append("import io.swagger.v3.oas.annotations.tags.Tag;\n");
         controllerClass.append("import jakarta.validation.Valid;\n");

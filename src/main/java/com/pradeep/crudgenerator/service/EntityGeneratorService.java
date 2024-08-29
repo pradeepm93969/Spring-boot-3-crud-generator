@@ -66,14 +66,20 @@ public class EntityGeneratorService {
 
         StringBuilder entityFile = new StringBuilder();
         // Generate package declaration
-        entityFile.append("package ").append(request.getPackageName()).append(".jpa.domain;\n\n");
+        entityFile.append("package ").append(request.getPackageName()).append(".jpa.domain")
+                .append(StringUtils.isNotBlank(request.getSubPackageName()) ? "."
+                        + request.getSubPackageName() : "")
+                .append(";\n\n");
         // Import necessary packages
         generateImportStatements(entityClass.toString(), entityFile, request);
 
         entityFile.append(entityClass.toString());
 
         // Write entity class to file
-        String filePath = request.getDirectory() + "\\jpa\\domain\\Jpa" + request.getEntityName() + ".java";
+        String filePath = request.getDirectory() + "\\jpa\\domain"
+                + (StringUtils.isNotBlank(request.getSubPackageName()) ? "\\"
+                + request.getSubPackageName() : "")
+                + "\\Jpa" + request.getEntityName() + ".java";
         FileUtils.writeFile(entityFile.toString(), filePath);
     }
 
@@ -306,7 +312,10 @@ public class EntityGeneratorService {
 
         request.getProperties().stream().filter(p -> p.getType().equalsIgnoreCase("Enum")).forEach(
                 fp -> {
-                    entityFile.append("import ").append(request.getPackageName()).append(".domain.support.")
+                    entityFile.append("import ").append(request.getPackageName()).append(".domain")
+                            .append(StringUtils.isNotBlank(request.getSubPackageName()) ? "."
+                                    + request.getSubPackageName() : "")
+                            .append(".support.")
                             .append(CrudStringUtils.capitalizeFirstLetter(fp.getName())).append("Enum;\n");
                 }
         );
@@ -387,10 +396,15 @@ public class EntityGeneratorService {
     }
 
     private void generateEnumClass(EntityProperties property, CRUDGenerationRequest request) {
-        String filePath = request.getDirectory() + "\\domain\\support\\"
-                + CrudStringUtils.capitalizeFirstLetter(property.getName()) + "Enum.java";
+        String filePath = request.getDirectory() + "\\domain"
+                + (StringUtils.isNotBlank(request.getSubPackageName()) ? "\\"
+                + request.getSubPackageName() : "")
+                + "\\support\\" + CrudStringUtils.capitalizeFirstLetter(property.getName()) + "Enum.java";
         StringBuilder enumClassBuilder = new StringBuilder();
-        enumClassBuilder.append("package ").append(request.getPackageName()).append(".domain.support;\n\n");
+        enumClassBuilder.append("package ").append(request.getPackageName()).append(".domain")
+                .append(StringUtils.isNotBlank(request.getSubPackageName()) ? "."
+                        + request.getSubPackageName() : "")
+                .append(".support;\n\n");
         enumClassBuilder.append("public enum ").append(CrudStringUtils.capitalizeFirstLetter(property.getName()))
                 .append("Enum").append(" {\n\n");
 

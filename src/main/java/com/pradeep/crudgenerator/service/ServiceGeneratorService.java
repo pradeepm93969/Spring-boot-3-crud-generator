@@ -5,6 +5,7 @@ import com.pradeep.crudgenerator.utils.CrudStringUtils;
 import com.pradeep.crudgenerator.utils.FileUtils;
 import cz.jirutka.rsql.parser.RSQLParser;
 import cz.jirutka.rsql.parser.ast.Node;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,10 @@ public class ServiceGeneratorService {
     public void generateService(CRUDGenerationRequest request) {
         StringBuilder serviceClass = new StringBuilder();
 
-        serviceClass.append("package ").append(request.getPackageName()).append(".service;\n\n");
+        serviceClass.append("package ").append(request.getPackageName()).append(".service")
+                .append(StringUtils.isNotBlank(request.getSubPackageName()) ? "."
+                        + request.getSubPackageName() : "")
+                .append(";\n\n");
 
         generateImports(serviceClass, request);
 
@@ -44,7 +48,10 @@ public class ServiceGeneratorService {
         serviceClass.append("}");
 
         // Write request class to file
-        String filePath = request.getDirectory() + "\\service\\" + request.getEntityName() + "Service.java";
+        String filePath = request.getDirectory() + "\\service"
+                + (StringUtils.isNotBlank(request.getSubPackageName()) ? "\\"
+                + request.getSubPackageName() : "")
+                + "\\" + request.getEntityName() + "Service.java";
         FileUtils.writeFile(serviceClass.toString(), filePath);
 
     }
@@ -172,12 +179,21 @@ public class ServiceGeneratorService {
 
 
     private void generateImports(StringBuilder serviceClass, CRUDGenerationRequest request) {
-        serviceClass.append("import ").append(request.getPackageName()).append(".domain.").append(
+        serviceClass.append("import ").append(request.getPackageName()).append(".domain")
+                .append(StringUtils.isNotBlank(request.getSubPackageName()) ? "."
+                        + request.getSubPackageName() : "")
+                .append(".")
+                .append(request.getEntityName()).append(";\n");
+        serviceClass.append("import ").append(request.getPackageName()).append(".jpa.domain")
+                .append(StringUtils.isNotBlank(request.getSubPackageName()) ? "."
+                        + request.getSubPackageName() : "")
+                .append(".Jpa").append(
                 request.getEntityName()).append(";\n");
-        serviceClass.append("import ").append(request.getPackageName()).append(".jpa.domain.Jpa").append(
-                request.getEntityName()).append(";\n");
-        serviceClass.append("import ").append(request.getPackageName()).append(".jpa.repository.").append(
-                request.getEntityName()).append("Repository;\n");
+        serviceClass.append("import ").append(request.getPackageName()).append(".jpa.repository")
+                .append(StringUtils.isNotBlank(request.getSubPackageName()) ? "."
+                        + request.getSubPackageName() : "")
+                .append(".")
+                .append(request.getEntityName()).append("Repository;\n");
 
         serviceClass.append("import ").append(request.getPackageName()).append(".common.jpa.rsql.CustomRsqlVisitor;\n");
 

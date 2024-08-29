@@ -46,14 +46,21 @@ public class DomainGeneratorService {
 
         StringBuilder domainFile = new StringBuilder();
         // Generate package declaration
-        domainFile.append("package ").append(request.getPackageName()).append(".domain;\n\n");
+        domainFile.append("package ").append(request.getPackageName())
+                .append(".domain")
+                .append(StringUtils.isNotBlank(request.getSubPackageName()) ? "."
+                        + request.getSubPackageName() : "")
+                .append(";\n\n");
         // Import necessary packages
         generateImportStatements(domainClass.toString(), domainFile, request);
 
         domainFile.append(domainClass.toString());
 
         // Write request class to file
-        String filePath = request.getDirectory() + "\\domain\\" + request.getEntityName() + ".java";
+        String filePath = request.getDirectory() + "\\domain"
+                + (StringUtils.isNotBlank(request.getSubPackageName()) ? "\\"
+                + request.getSubPackageName() : "")
+                + "\\" + request.getEntityName() + ".java";
         FileUtils.writeFile(domainFile.toString(), filePath);
     }
 
@@ -118,7 +125,10 @@ public class DomainGeneratorService {
 
         request.getProperties().stream().filter(p -> p.getType().equalsIgnoreCase("Enum")).forEach(
                 fp -> {
-                    file.append("import ").append(request.getPackageName()).append(".domain.support.")
+                    file.append("import ").append(request.getPackageName()).append(".domain")
+                            .append(StringUtils.isNotBlank(request.getSubPackageName()) ? "."
+                                    + request.getSubPackageName() : "")
+                            .append(".support.")
                             .append(CrudStringUtils.capitalizeFirstLetter(fp.getName())).append("Enum;\n");
                 }
         );

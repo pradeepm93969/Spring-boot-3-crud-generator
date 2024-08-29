@@ -14,9 +14,12 @@
             <div class="grid gap-6 grid-cols-1 sm:grid-cols-2 m-5">
                 <div th:replace="~{layouts/fragments/formElements :: inputField(label='Entity Name', name='entityName')}"></div>
             </div>
-            <div class="grid gap-6 grid-cols-1 sm:grid-cols-2 m-5">
+            <div class="grid gap-6 grid-cols-1 sm:grid-cols-1 m-5">
                 <div th:replace="~{layouts/fragments/formElements :: inputField(label='Directory', name='directory')}"></div>
+            </div>
+            <div class="grid gap-6 grid-cols-1 sm:grid-cols-2 m-5">
                 <div th:replace="~{layouts/fragments/formElements :: inputField(label='Package Name', name='packageName')}"></div>
+                <div th:replace="~{layouts/fragments/formElements :: inputField(label='Sub Package Name', name='subPackageName')}"></div>
             </div>
             <div class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 m-5">
                 <div th:replace="~{layouts/fragments/formElements :: inputField(label='JPA Package Name', name='jpaPackageName')}"></div>

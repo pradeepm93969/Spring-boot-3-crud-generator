@@ -164,6 +164,7 @@ function handleCrudGeneration() {
     var data = {
         directory: formData.get('directory'),
         packageName: formData.get('packageName'),
+        subPackageName: formData.get('subPackageName'),
         entityName: formData.get('entityName'),
         databaseSchema: formData.get('databaseSchema'),
         tablePrefix: formData.get('tablePrefix'),

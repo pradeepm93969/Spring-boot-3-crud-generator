@@ -22,6 +22,9 @@ public class CRUDGenerationRequest {
     @Pattern(regexp = "^(?:[a-zA-Z_][a-zA-Z0-9_]*\\.)*[a-zA-Z_][a-zA-Z0-9_]*$")
     private String packageName;
 
+    @Pattern(regexp = "^[a-zA-Z_$][a-zA-Z0-9_$]*$")
+    private String subPackageName;
+
     @NotBlank
     @Pattern(regexp = "^[a-zA-Z_$][a-zA-Z0-9_$]*$")
     private String EntityName;

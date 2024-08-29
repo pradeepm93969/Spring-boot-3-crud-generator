@@ -4,6 +4,7 @@ import com.pradeep.crudgenerator.datamodal.CRUDGenerationRequest;
 import com.pradeep.crudgenerator.datamodal.EntityProperties;
 import com.pradeep.crudgenerator.utils.CrudStringUtils;
 import com.pradeep.crudgenerator.utils.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -53,8 +54,10 @@ public class LiquibaseGeneratorService {
         generateIndexes(sqlFile, request);
 
         // Write request class to file
-        String filePath = request.getDirectory() + "\\jpa\\create-"
-                + request.getEntityName().toLowerCase() + "-table.sql";
+        String filePath = request.getDirectory() + "\\jpa"
+                + (StringUtils.isNotBlank(request.getSubPackageName()) ? "\\"
+                + request.getSubPackageName() : "")
+                + "\\create-" + request.getEntityName().toLowerCase() + "-table.sql";
         FileUtils.writeFile(sqlFile.toString(), filePath);
 
     }
