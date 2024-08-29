@@ -146,7 +146,9 @@ public class ControllerGeneratorService {
     private void generateDeleteByIdMethod(StringBuilder controllerClass, CRUDGenerationRequest request) {
         controllerClass.append("    @DeleteMapping(\"/{id}\")\n");
         controllerClass.append("    @ResponseStatus(HttpStatus.NO_CONTENT)\n");
-        controllerClass.append("    @PreAuthorize(\"hasAnyAuthority('ROLE_SUPER_ADMIN')\")\n");
+        controllerClass.append("    @PreAuthorize(\"hasAnyAuthority('ROLE_MANAGE_")
+                .append(CrudStringUtils.convertCamelToSnake(request.getEntityName()))
+                .append("','ROLE_ADMIN')\")\n");
         controllerClass.append("    public ResponseEntity<Void> deleteById(@PathVariable(\"id\") \n");
         controllerClass.append("            @NotBlank(message = \"id is mandatory\") String id) {\n");
         controllerClass.append("        get").append(request.getEntityName())
