@@ -259,7 +259,10 @@ public class EntityGeneratorService {
         entityFile.append("import ").append(request.getJpaPackageName()).append(".id.UlidGenerator;\n");
         entityFile.append("import lombok.Data;\n");
         entityFile.append("import jakarta.persistence.Column;\n");
-        entityFile.append("import ").append(request.getPackageName()).append(".domain.").append(
+        entityFile.append("import ").append(request.getPackageName()).append(".domain")
+                .append(StringUtils.isNotBlank(request.getSubPackageName()) ? "."
+                        + request.getSubPackageName() : "")
+                .append(".").append(
                 request.getEntityName()).append(";\n");
         if (content.contains("@Convert"))
             entityFile.append("import jakarta.persistence.Convert;\n");
