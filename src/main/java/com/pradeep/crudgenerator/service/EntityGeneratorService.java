@@ -309,6 +309,12 @@ public class EntityGeneratorService {
             entityFile.append("import javax.money.Monetary;\n");
         if (content.contains("Money."))
             entityFile.append("import org.javamoney.moneta.Money;\n");
+        if (content.contains("Money."))
+            entityFile.append("import org.javamoney.moneta.Money;\n");
+        if (content.contains("Enumerated("))
+            entityFile.append("import jakarta.persistence.Enumerated;\n");
+        if (content.contains("EnumType."))
+            entityFile.append("import jakarta.persistence.EnumType;\n");
 
         if (content.contains("Phone"))
             entityFile.append("import ").append(request.getJpaPackageName()).append(".domain.Phone;\n");
@@ -364,6 +370,7 @@ public class EntityGeneratorService {
 
         //Add Enum Constant
         if (property.getType().equalsIgnoreCase("Enum")) {
+            field.append("@Enumerated(EnumType.STRING)\n");
             generateEnumClass(property, request);
         }
 
