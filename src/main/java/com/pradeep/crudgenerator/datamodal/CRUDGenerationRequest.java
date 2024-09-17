@@ -40,9 +40,11 @@ public class CRUDGenerationRequest {
 
     private boolean generateAuditSection = true;
 
+    private boolean generateImportExport = true;
+
     @NotBlank
     @Pattern(regexp = "^(?:[a-zA-Z_][a-zA-Z0-9_]*\\.)*[a-zA-Z_][a-zA-Z0-9_]*$")
-    private String jpaPackageName;
+    private String commonPackageName;
 
     @NotEmpty
     @Valid

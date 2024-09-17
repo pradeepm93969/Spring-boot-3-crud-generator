@@ -256,7 +256,7 @@ public class EntityGeneratorService {
 
     private void generateImportStatements(String content, StringBuilder entityFile, CRUDGenerationRequest request) {
 
-        entityFile.append("import ").append(request.getJpaPackageName()).append(".id.UlidGenerator;\n");
+        entityFile.append("import ").append(request.getCommonPackageName()).append(".jpa.id.UlidGenerator;\n");
         entityFile.append("import lombok.Data;\n");
         entityFile.append("import jakarta.persistence.Column;\n");
         entityFile.append("import ").append(request.getPackageName()).append(".domain")
@@ -317,7 +317,7 @@ public class EntityGeneratorService {
             entityFile.append("import jakarta.persistence.EnumType;\n");
 
         if (content.contains("Phone"))
-            entityFile.append("import ").append(request.getJpaPackageName()).append(".domain.Phone;\n");
+            entityFile.append("import ").append(request.getCommonPackageName()).append(".jpa.domain.Phone;\n");
 
         request.getProperties().stream().filter(p -> p.getType().equalsIgnoreCase("Enum")).forEach(
                 fp -> {

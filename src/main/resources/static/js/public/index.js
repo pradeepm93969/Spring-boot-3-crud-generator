@@ -171,7 +171,8 @@ function handleCrudGeneration() {
         generateLiquibase: formData.get('generateLiquibase') === 'true',
         liquibaseAuditorName: formData.get('liquibaseAuditorName'),
         generateAuditSection: formData.get('generateAuditSection') === 'true',
-        jpaPackageName: formData.get('jpaPackageName'),
+        commonPackageName: formData.get('commonPackageName'),
+        generateImportExport: formData.get('generateImportExport') === 'true',
         properties: []
     };
 

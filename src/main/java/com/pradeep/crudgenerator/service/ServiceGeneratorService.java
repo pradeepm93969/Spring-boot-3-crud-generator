@@ -34,7 +34,13 @@ public class ServiceGeneratorService {
         serviceClass.append("    private final ").append(request.getEntityName()).append("Repository ")
                 .append(CrudStringUtils.lowerCaseFirstLetter(request.getEntityName())).append("Repository;\n\n");
 
+        serviceClass.append("    @Getter\n");
         serviceClass.append("    private final Validator validator;\n\n");
+
+        if (request.isGenerateImportExport()) {
+            serviceClass.append("    @Getter\n");
+            serviceClass.append("    private final CsvImportExportService csvImportExportService;\n\n");
+        }
 
         generateGetMethod(serviceClass, request);
         generateGetByIdMethod(serviceClass, request);
@@ -44,6 +50,9 @@ public class ServiceGeneratorService {
         generateDeleteByIdMethod(serviceClass, request);
         generateFindByIdMethod(serviceClass, request);
         generateValidatePatchMethod(serviceClass, request);
+        if (request.isGenerateImportExport()) {
+            generateUploadMethod(serviceClass, request);
+        }
         
         serviceClass.append("}");
 
@@ -178,6 +187,54 @@ public class ServiceGeneratorService {
         serviceClass.append("    }\n\n");
     }
 
+    private void generateUploadMethod(StringBuilder serviceClass,
+                                      CRUDGenerationRequest request) {
+        serviceClass.append("    public void upload(MultipartFile file) {\n");
+        serviceClass.append("        String[] headers = new String[] {");
+        request.getProperties().forEach(property -> {
+            serviceClass.append("\"").append(property.getName()).append("\", ");
+        });
+        serviceClass.setLength(serviceClass.length() - 2); // Remove trailing comma and space
+        serviceClass.append("};\n");
+
+        // Start defining the cell processors
+        serviceClass.append("        final CellProcessor[] processors = new CellProcessor[] {\n");
+
+        // Loop through each property to add the corresponding processor based on constraints
+        request.getProperties().forEach(property -> {
+            if (property.getType().equals("String")) {
+                // Use StrMinMax processor for strings with length constraints
+                serviceClass.append("            new StrMinMax(").append(property.getMin()).append(", ").append(property.getMax()).append("), // ").append(property.getName()).append("\n");
+            } else if (property.getType().equals("Integer") || property.getType().equals("Long")) {
+                // Use ParseInt for integer types
+                serviceClass.append("            new ParseInt(), // ").append(property.getName()).append("\n");
+            } else if (property.getType().equals("BigDecimal")) {
+                // Use ParseBigDecimal for BigDecimal types
+                serviceClass.append("            new ParseBigDecimal(), // ").append(property.getName()).append("\n");
+            } else {
+                // Add appropriate processor for other types (e.g., Boolean, Enum, etc.)
+                serviceClass.append("            new Optional(), // ").append(property.getName()).append("\n");
+            }
+        });
+        serviceClass.append("        };\n");
+
+        // Define the list to hold the read CSV data
+        serviceClass.append("        List<Jpa").append(request.getEntityName()).append("> entities = null;\n");
+
+        // Handle file reading and CSV processing using csvImportExportService
+        serviceClass.append("        try {\n");
+        serviceClass.append("            entities = csvImportExportService" +
+                        ".readCsvFile(file, Jpa")
+                .append(request.getEntityName()).append(".class,\n");
+        serviceClass.append("                    headers,\n");
+        serviceClass.append("                    processors);\n");
+        serviceClass.append("        } catch (IOException e) {\n");
+        serviceClass.append("            e.printStackTrace();\n");
+        serviceClass.append("        }\n");
+
+        serviceClass.append("        get").append(request.getEntityName()).append("Repository().saveAll(entities);\n");
+        serviceClass.append("    }\n\n");
+    }
 
     private void generateImports(StringBuilder serviceClass, CRUDGenerationRequest request) {
         serviceClass.append("import ").append(request.getPackageName()).append(".domain")
@@ -197,6 +254,17 @@ public class ServiceGeneratorService {
                 .append(request.getEntityName()).append("Repository;\n");
 
         serviceClass.append("import ").append(request.getPackageName()).append(".common.jpa.rsql.CustomRsqlVisitor;\n");
+
+        if (request.isGenerateImportExport()) {
+            serviceClass.append("import ").append(request.getCommonPackageName())
+                    .append(".csv.CsvImportExportService;\n");
+            serviceClass.append("import org.springframework.web.multipart.MultipartFile;\n");
+            serviceClass.append("import java.io.IOException;\n");
+
+
+            serviceClass.append("import org.supercsv.cellprocessor.ift.CellProcessor;\n");
+            serviceClass.append("import org.supercsv.cellprocessor.constraint.StrMinMax;\n");
+        }
 
         if (request.getProperties().stream().anyMatch(p -> p.getType().equalsIgnoreCase("MonetaryAmount"))) {
             serviceClass.append("import javax.money.Monetary;\n");

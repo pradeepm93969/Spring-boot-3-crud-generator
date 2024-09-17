@@ -4,16 +4,10 @@ import com.pradeep.crudgenerator.datamodal.CRUDGenerationRequest;
 import com.pradeep.crudgenerator.datamodal.EntityProperties;
 import com.pradeep.crudgenerator.utils.CrudStringUtils;
 import com.pradeep.crudgenerator.utils.FileUtils;
-import jakarta.persistence.Column;
 import jakarta.validation.Valid;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.util.List;
 
 @Service
@@ -117,7 +111,7 @@ public class DomainGeneratorService {
         if (content.contains("@JsonProperty"))
             file.append("import com.fasterxml.jackson.annotation.JsonProperty;\n");
         if (content.contains("Phone"))
-            file.append("import ").append(request.getJpaPackageName()).append(".domain.Phone;\n");
+            file.append("import ").append(request.getCommonPackageName()).append(".jpa.domain.Phone;\n");
         if (content.contains(" CurrencyUnit"))
             file.append("import javax.money.CurrencyUnit;\n");
         if (content.contains(" Monetary"))

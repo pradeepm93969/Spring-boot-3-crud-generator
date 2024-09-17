@@ -31,8 +31,15 @@ public class ControllerGeneratorService {
         controllerClass.append("    @Getter\n");
         controllerClass.append("    private final ").append(request.getEntityName()).append("Service ")
                 .append(CrudStringUtils.lowerCaseFirstLetter(request.getEntityName())).append("Service;\n\n");
-
+        if (request.isGenerateImportExport()) {
+            controllerClass.append("    @Getter\n");
+            controllerClass.append("    private final CsvImportExportService csvImportExportService;\n\n");
+        }
         generateGetMethod(controllerClass, request);
+        if (request.isGenerateImportExport()) {
+            generateExtractMethod(controllerClass, request);
+            generateUploadMethod(controllerClass, request);
+        }
         generateGetByIdMethod(controllerClass, request);
         generateCreateMethod(controllerClass, request);
         generateUpdateMethod(controllerClass, request);
@@ -68,6 +75,52 @@ public class ControllerGeneratorService {
                 .append("Service().get(\n");
         controllerClass.append("            rsql, pageNo - 1, pageSize, sortBy, sortDirection);\n");
         controllerClass.append("        return ResponseEntity.ok(result);\n");
+        controllerClass.append("    }\n\n");
+    }
+
+    private void generateExtractMethod(StringBuilder controllerClass,
+                                       CRUDGenerationRequest request) {
+        controllerClass.append("    @GetMapping(\"/extract\")\n");
+        controllerClass.append("    @PreAuthorize(\"hasAnyAuthority('ROLE_READ_")
+                .append(CrudStringUtils.convertCamelToSnake(request.getEntityName()))
+                .append("','ROLE_MANAGE_")
+                .append(CrudStringUtils.convertCamelToSnake(request.getEntityName()))
+                .append("','ROLE_ADMIN')\")\n");
+        controllerClass.append("    public ResponseEntity<Resource> extract(\n");
+        controllerClass.append("            @RequestParam(defaultValue = \"\") String rsql,\n");
+        controllerClass.append("            @Positive @RequestParam(defaultValue = \"1\") Integer pageNo,\n");
+        controllerClass.append("            @Positive @RequestParam(defaultValue = \"10\") Integer pageSize,\n");
+        controllerClass.append("            @RequestParam(defaultValue = \"id\") String sortBy,\n");
+        controllerClass.append("            @RequestParam(defaultValue = \"asc\") String sortDirection)\n");
+        controllerClass.append("            throws IOException {\n");
+        controllerClass.append("        Page<").append(request.getEntityName()).append("> result = get")
+                .append(request.getEntityName())
+                .append("Service().get(\n");
+        controllerClass.append("            rsql, pageNo - 1, pageSize, sortBy, sortDirection);\n");
+        controllerClass.append("        List<String> excludeColumns = Arrays.asList(new String[] {\n");
+        controllerClass.append("                \"createdAt\", \"createdBy\", \"updatedAt\", \"updatedBy\" });\n");
+        controllerClass.append("        Resource resource = csvImportExportService.generateCsvFile(result.stream().toList(),\n");
+        controllerClass.append("                excludeColumns);\n");
+        controllerClass.append("        return ResponseEntity.ok()\n");
+        controllerClass.append("                .contentType(MediaType.parseMediaType(\"application/octet-stream\"))\n");
+        controllerClass.append("                .header(HttpHeaders.CONTENT_DISPOSITION, \"attachment; \" +\n");
+        controllerClass.append("                        \"filename=\\\"")
+                .append(CrudStringUtils.convertCamelToSnake(request.getEntityName()))
+                .append("_\" + LocalDateTime.now() + \".csv\\\")\")\n");
+        controllerClass.append("                .body(resource);\n");
+        controllerClass.append("    }\n\n");
+    }
+
+    private void generateUploadMethod(StringBuilder controllerClass,
+                                      CRUDGenerationRequest request) {
+        controllerClass.append("    @PostMapping(\"/upload\")\n");
+        controllerClass.append("    @PreAuthorize(\"hasAnyAuthority('ROLE_MANAGE_")
+                .append(CrudStringUtils.convertCamelToSnake(request.getEntityName()))
+                .append("','ROLE_ADMIN')\")\n");
+        controllerClass.append("    public void uploadFile(@RequestParam(\"file\") MultipartFile file) {\n");
+        controllerClass.append("        get")
+                .append(request.getEntityName())
+                .append("Service.upload(file);\n");
         controllerClass.append("    }\n\n");
     }
 
@@ -168,6 +221,17 @@ public class ControllerGeneratorService {
                         + request.getSubPackageName() : "")
                 .append(".")
                 .append(request.getEntityName()).append("Service;\n");
+        if (request.isGenerateImportExport()) {
+            controllerClass.append("import ").append(request.getCommonPackageName())
+                    .append(".csv.CsvImportExportService;\n");
+            controllerClass.append("import org.springframework.core.io.Resource;\n");
+            controllerClass.append("import org.springframework.http.MediaType;\n");
+            controllerClass.append("import org.springframework.web.multipart.MultipartFile;\n");
+            controllerClass.append("import java.io.IOException;\n");
+            controllerClass.append("import java.time.LocalDateTime;\n");
+            controllerClass.append("import java.util.Arrays;\n");
+            controllerClass.append("import java.util.List;\n");
+        }
         controllerClass.append("import io.swagger.v3.oas.annotations.security.SecurityRequirement;\n");
         controllerClass.append("import io.swagger.v3.oas.annotations.tags.Tag;\n");
         controllerClass.append("import jakarta.validation.Valid;\n");

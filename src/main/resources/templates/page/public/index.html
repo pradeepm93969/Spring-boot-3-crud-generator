@@ -22,7 +22,7 @@
                 <div th:replace="~{layouts/fragments/formElements :: inputField(label='Sub Package Name', name='subPackageName')}"></div>
             </div>
             <div class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 m-5">
-                <div th:replace="~{layouts/fragments/formElements :: inputField(label='JPA Package Name', name='jpaPackageName')}"></div>
+                <div th:replace="~{layouts/fragments/formElements :: inputField(label='Common Package Name', name='commonPackageName')}"></div>
                 <div th:replace="~{layouts/fragments/formElements :: inputField(label='Table Prefix', name='tablePrefix')}"></div>
                 <div th:replace="~{layouts/fragments/formElements :: toggleButtonChecked(label='Generate Audit Section', name='generateAuditSection')}"></div>
             </div>
@@ -34,6 +34,9 @@
                 <div id="databaseSchemaField">
                     <div th:replace="~{layouts/fragments/formElements :: inputField(label='Database Schema', name='databaseSchema')}"></div>
                 </div>
+            </div>
+            <div class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 m-5">
+                <div th:replace="~{layouts/fragments/formElements :: toggleButtonChecked(label='Generate Import/Export', name='generateImportExport')}"></div>
             </div>
 
             <div class="bg-slate-300 text-slate-900 mb-0 px-6 py-3 my-5 text-base font-semibold">
