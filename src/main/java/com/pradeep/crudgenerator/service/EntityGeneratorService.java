@@ -356,10 +356,9 @@ public class EntityGeneratorService {
             field.append("\", length = 100");
         } else if (property.isId()) {
             field.append("\", length = 60");
-        } else {
+        } else if (property.getColumnLength() > 0 && property.getColumnLength() != 255) {
             field.append("\", length = ").append(property.getColumnLength());
         }
-
         if (property.isRequired() || property.getType().equalsIgnoreCase("MonetaryAmount")) {
             field.append(", nullable = false");
         }
@@ -370,7 +369,7 @@ public class EntityGeneratorService {
 
         //Add Enum Constant
         if (property.getType().equalsIgnoreCase("Enum")) {
-            field.append("@Enumerated(EnumType.STRING)\n");
+            field.append("    @Enumerated(EnumType.STRING)\n");
             generateEnumClass(property, request);
         }
 

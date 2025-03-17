@@ -22,6 +22,10 @@ public class CRUDGeneratorService {
 
     public CrudGenerationResponse createClasses(CRUDGenerationRequest request) {
 
+        if (StringUtils.isBlank(request.getCommonPackageName())) {
+            request.setCommonPackageName(request.getPackageName());
+        }
+
         request.getProperties().stream().forEach(p -> {
             if (StringUtils.isNotBlank(p.getPattern())) {
                 try {

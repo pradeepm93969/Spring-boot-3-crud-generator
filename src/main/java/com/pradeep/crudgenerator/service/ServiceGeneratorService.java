@@ -26,20 +26,17 @@ public class ServiceGeneratorService {
         generateImports(serviceClass, request);
 
         serviceClass.append("@Service\n");
-        serviceClass.append("@AllArgsConstructor\n");
+        serviceClass.append("@RequiredArgsConstructor\n");
         serviceClass.append("public class ").append(
                 request.getEntityName()).append("Service {\n\n");
 
-        serviceClass.append("    @Getter\n");
         serviceClass.append("    private final ").append(request.getEntityName()).append("Repository ")
-                .append(CrudStringUtils.lowerCaseFirstLetter(request.getEntityName())).append("Repository;\n\n");
-
-        serviceClass.append("    @Getter\n");
-        serviceClass.append("    private final Validator validator;\n\n");
-
+                .append(CrudStringUtils.lowerCaseFirstLetter(request.getEntityName())).append("Repository;\n");
+        serviceClass.append("    private final Validator validator;\n");
         if (request.isGenerateImportExport()) {
-            serviceClass.append("    @Getter\n");
             serviceClass.append("    private final CsvImportExportService csvImportExportService;\n\n");
+        } else {
+            serviceClass.append("\n");
         }
 
         generateGetMethod(serviceClass, request);
@@ -82,8 +79,8 @@ public class ServiceGeneratorService {
                 "CustomRsqlVisitor<Jpa").append(request.getEntityName()).append(">());\n");
         serviceClass.append("        }\n");
         serviceClass.append("        Page<Jpa").append(request.getEntityName())
-                .append("> page = get").append(request.getEntityName())
-                .append("Repository().findAll(spec, pageable);\n");
+                .append("> page = ").append(CrudStringUtils.lowerCaseFirstLetter(request.getEntityName()))
+                .append("Repository.findAll(spec, pageable);\n");
 
         serviceClass.append("        return page.map(entity -> entity.fromMe());\n");
 
@@ -104,7 +101,7 @@ public class ServiceGeneratorService {
         serviceClass.append("        Jpa").append(request.getEntityName()).append(" entity = new Jpa")
                 .append(request.getEntityName()).append("();\n");
         serviceClass.append("        entity.toMe(request);\n");
-        serviceClass.append("        entity = get").append(request.getEntityName()).append("Repository().save(entity);\n");
+        serviceClass.append("        entity = ").append(CrudStringUtils.lowerCaseFirstLetter(request.getEntityName())).append("Repository.save(entity);\n");
         serviceClass.append("        return entity.fromMe();\n");
         serviceClass.append("    }\n\n");
     }
@@ -116,7 +113,7 @@ public class ServiceGeneratorService {
                 .append(request.getEntityName()).append(" request) {\n");
         serviceClass.append("        Jpa").append(request.getEntityName()).append(" entity = findById(id);\n");
         serviceClass.append("        entity.toMe(request);\n");
-        serviceClass.append("        entity = get").append(request.getEntityName()).append("Repository().save(entity);\n");
+        serviceClass.append("        entity = ").append(CrudStringUtils.lowerCaseFirstLetter(request.getEntityName())).append("Repository.save(entity);\n");
         serviceClass.append("        return entity.fromMe();\n");
         serviceClass.append("    }\n\n");
     }
@@ -141,7 +138,7 @@ public class ServiceGeneratorService {
         serviceClass.append("        validatePatch(originalObject, request.keySet());\n");
 
         serviceClass.append("        entity.toMe(originalObject);\n");
-        serviceClass.append("        entity = get").append(request.getEntityName()).append("Repository().save(entity);\n");
+        serviceClass.append("        entity = ").append(CrudStringUtils.lowerCaseFirstLetter(request.getEntityName())).append("Repository.save(entity);\n");
         serviceClass.append("        return entity.fromMe();\n");
         serviceClass.append("    }\n\n");
     }
@@ -149,15 +146,15 @@ public class ServiceGeneratorService {
     private void generateDeleteByIdMethod(StringBuilder serviceClass, CRUDGenerationRequest request) {
         serviceClass.append("    @CacheEvict(value = \"").append(request.getEntityName()).append("\", key = \"#id\")\n");
         serviceClass.append("    public void deleteById(String id) {\n");
-        serviceClass.append("        get").append(request.getEntityName())
-                .append("Repository().deleteById(id);\n");
+        serviceClass.append("        ").append(CrudStringUtils.lowerCaseFirstLetter(request.getEntityName()))
+                .append("Repository.deleteById(id);\n");
         serviceClass.append("    }\n\n");
     }
 
     private void generateFindByIdMethod(StringBuilder serviceClass, CRUDGenerationRequest request) {
         serviceClass.append("    private Jpa").append(request.getEntityName()).append(" findById(String id) {\n");
-        serviceClass.append("        return get").append(request.getEntityName())
-                .append("Repository().findById(id)\n");
+        serviceClass.append("        return ").append(CrudStringUtils.lowerCaseFirstLetter(request.getEntityName()))
+                .append("Repository.findById(id)\n");
         serviceClass.append("            .orElseThrow(() -> new EntityNotFoundException(\"Entity not found with id: \" + id));\n");
         serviceClass.append("    }\n\n");
     }
@@ -232,7 +229,7 @@ public class ServiceGeneratorService {
         serviceClass.append("            e.printStackTrace();\n");
         serviceClass.append("        }\n");
 
-        serviceClass.append("        get").append(request.getEntityName()).append("Repository().saveAll(entities);\n");
+        serviceClass.append("        ").append(CrudStringUtils.lowerCaseFirstLetter(request.getEntityName())).append("Repository.saveAll(entities);\n");
         serviceClass.append("    }\n\n");
     }
 
@@ -277,8 +274,7 @@ public class ServiceGeneratorService {
         serviceClass.append("import jakarta.validation.ConstraintViolation;\n");
         serviceClass.append("import jakarta.validation.ConstraintViolationException;\n");
         serviceClass.append("import jakarta.validation.Validator;\n");
-        serviceClass.append("import lombok.AllArgsConstructor;\n");
-        serviceClass.append("import lombok.Getter;\n");
+        serviceClass.append("import lombok.RequiredArgsConstructor;\n");
         serviceClass.append("import org.apache.commons.lang3.StringUtils;\n");
         serviceClass.append("import org.springframework.data.domain.Page;\n");
         serviceClass.append("import org.springframework.data.domain.PageRequest;\n");

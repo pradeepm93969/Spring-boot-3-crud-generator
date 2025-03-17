@@ -24,15 +24,13 @@ public class ControllerGeneratorService {
         controllerClass.append("@Tag(name = \"").append(
                 request.getEntityName()).append("Management\")\n");
         controllerClass.append("@SecurityRequirement(name = \"bearerAuth\")\n");
-        controllerClass.append("@AllArgsConstructor\n");
+        controllerClass.append("@RequiredArgsConstructor\n");
         controllerClass.append("public class ").append(
                 request.getEntityName()).append("Endpoint {\n\n");
 
-        controllerClass.append("    @Getter\n");
         controllerClass.append("    private final ").append(request.getEntityName()).append("Service ")
                 .append(CrudStringUtils.lowerCaseFirstLetter(request.getEntityName())).append("Service;\n\n");
         if (request.isGenerateImportExport()) {
-            controllerClass.append("    @Getter\n");
             controllerClass.append("    private final CsvImportExportService csvImportExportService;\n\n");
         }
         generateGetMethod(controllerClass, request);
@@ -63,16 +61,16 @@ public class ControllerGeneratorService {
                 .append(CrudStringUtils.convertCamelToSnake(request.getEntityName()))
                 .append("','ROLE_MANAGE_")
                 .append(CrudStringUtils.convertCamelToSnake(request.getEntityName()))
-                .append("','ROLE_ADMIN')\")\n");
+                .append("','ROLE_SUPER_ADMIN')\")\n");
         controllerClass.append("    public ResponseEntity<Page<").append(request.getEntityName()).append(">> get(\n");
         controllerClass.append("            @RequestParam(defaultValue = \"\") String rsql,\n");
         controllerClass.append("            @Positive @RequestParam(defaultValue = \"1\") Integer pageNo,\n");
         controllerClass.append("            @Positive @RequestParam(defaultValue = \"10\") Integer pageSize,\n");
         controllerClass.append("            @RequestParam(defaultValue = \"id\") String sortBy,\n");
         controllerClass.append("            @RequestParam(defaultValue = \"asc\") String sortDirection) {\n");
-        controllerClass.append("        Page<").append(request.getEntityName()).append("> result = get")
-                .append(request.getEntityName())
-                .append("Service().get(\n");
+        controllerClass.append("        Page<").append(request.getEntityName()).append("> result = ")
+                .append(CrudStringUtils.lowerCaseFirstLetter(request.getEntityName()))
+                .append("Service.get(\n");
         controllerClass.append("            rsql, pageNo - 1, pageSize, sortBy, sortDirection);\n");
         controllerClass.append("        return ResponseEntity.ok(result);\n");
         controllerClass.append("    }\n\n");
@@ -85,7 +83,7 @@ public class ControllerGeneratorService {
                 .append(CrudStringUtils.convertCamelToSnake(request.getEntityName()))
                 .append("','ROLE_MANAGE_")
                 .append(CrudStringUtils.convertCamelToSnake(request.getEntityName()))
-                .append("','ROLE_ADMIN')\")\n");
+                .append("','ROLE_SUPER_ADMIN')\")\n");
         controllerClass.append("    public ResponseEntity<Resource> extract(\n");
         controllerClass.append("            @RequestParam(defaultValue = \"\") String rsql,\n");
         controllerClass.append("            @Positive @RequestParam(defaultValue = \"1\") Integer pageNo,\n");
@@ -93,9 +91,9 @@ public class ControllerGeneratorService {
         controllerClass.append("            @RequestParam(defaultValue = \"id\") String sortBy,\n");
         controllerClass.append("            @RequestParam(defaultValue = \"asc\") String sortDirection)\n");
         controllerClass.append("            throws IOException {\n");
-        controllerClass.append("        Page<").append(request.getEntityName()).append("> result = get")
-                .append(request.getEntityName())
-                .append("Service().get(\n");
+        controllerClass.append("        Page<").append(request.getEntityName()).append("> result = ")
+                .append(CrudStringUtils.lowerCaseFirstLetter(request.getEntityName()))
+                .append("Service.get(\n");
         controllerClass.append("            rsql, pageNo - 1, pageSize, sortBy, sortDirection);\n");
         controllerClass.append("        List<String> excludeColumns = Arrays.asList(new String[] {\n");
         controllerClass.append("                \"createdAt\", \"createdBy\", \"updatedAt\", \"updatedBy\" });\n");
@@ -116,10 +114,10 @@ public class ControllerGeneratorService {
         controllerClass.append("    @PostMapping(\"/upload\")\n");
         controllerClass.append("    @PreAuthorize(\"hasAnyAuthority('ROLE_MANAGE_")
                 .append(CrudStringUtils.convertCamelToSnake(request.getEntityName()))
-                .append("','ROLE_ADMIN')\")\n");
+                .append("','ROLE_SUPER_ADMIN')\")\n");
         controllerClass.append("    public void uploadFile(@RequestParam(\"file\") MultipartFile file) {\n");
-        controllerClass.append("        get")
-                .append(request.getEntityName())
+        controllerClass.append("        ")
+                .append(CrudStringUtils.lowerCaseFirstLetter(request.getEntityName()))
                 .append("Service.upload(file);\n");
         controllerClass.append("    }\n\n");
     }
@@ -130,13 +128,14 @@ public class ControllerGeneratorService {
                 .append(CrudStringUtils.convertCamelToSnake(request.getEntityName()))
                 .append("','ROLE_MANAGE_")
                 .append(CrudStringUtils.convertCamelToSnake(request.getEntityName()))
-                .append("','ROLE_ADMIN')\")\n");
+                .append("','ROLE_SUPER_ADMIN')\")\n");
         controllerClass.append("    public ResponseEntity<").append(request.getEntityName())
                 .append("> getById(@PathVariable(\"id\")\n");
         controllerClass.append("            @NotBlank(message = \"id is mandatory\") ")
                 .append("String id) {\n");
-        controllerClass.append("        ").append(request.getEntityName()).append(" response = get")
-                .append(request.getEntityName()).append("Service().getById(id);\n");
+        controllerClass.append("        ").append(request.getEntityName()).append(" response = ")
+                .append(CrudStringUtils.lowerCaseFirstLetter(request.getEntityName()))
+                .append("Service.getById(id);\n");
         controllerClass.append("        if (response == null) {\n");
         controllerClass.append("            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);\n");
         controllerClass.append("        }\n");
@@ -149,7 +148,7 @@ public class ControllerGeneratorService {
         controllerClass.append("    @ResponseStatus(HttpStatus.CREATED)\n");
         controllerClass.append("    @PreAuthorize(\"hasAnyAuthority('ROLE_MANAGE_")
                 .append(CrudStringUtils.convertCamelToSnake(request.getEntityName()))
-                .append("','ROLE_ADMIN')\")\n");
+                .append("','ROLE_SUPER_ADMIN')\")\n");
         controllerClass.append("    public ResponseEntity<").append(request.getEntityName())
                 .append("> create(@Valid @RequestBody ").append(request.getEntityName())
                 .append(" request) {\n");
@@ -164,16 +163,16 @@ public class ControllerGeneratorService {
         controllerClass.append("    @PutMapping(\"/{id}\")\n");
         controllerClass.append("    @PreAuthorize(\"hasAnyAuthority('ROLE_MANAGE_")
                 .append(CrudStringUtils.convertCamelToSnake(request.getEntityName()))
-                .append("','ROLE_ADMIN')\")\n");
+                .append("','ROLE_SUPER_ADMIN')\")\n");
         controllerClass.append("    public ResponseEntity<").append(request.getEntityName())
                 .append("> update(@PathVariable(\"id\")\n");
         controllerClass.append("            @NotBlank(message = \"id is mandatory\") ")
                 .append("String id,\n");
         controllerClass.append("            @Valid @RequestBody ")
                 .append(request.getEntityName()).append(" request) {\n");
-        controllerClass.append("        ").append(request.getEntityName()).append(" response = get")
-                .append(request.getEntityName())
-                .append("Service().update(id, request);\n");
+        controllerClass.append("        ").append(request.getEntityName()).append(" response = ")
+                .append(CrudStringUtils.lowerCaseFirstLetter(request.getEntityName()))
+                .append("Service.update(id, request);\n");
         controllerClass.append("        return new ResponseEntity<>(response, HttpStatus.OK);\n");
         controllerClass.append("    }\n\n");
     }
@@ -182,15 +181,15 @@ public class ControllerGeneratorService {
         controllerClass.append("    @PatchMapping(\"/{id}\")\n");
         controllerClass.append("    @PreAuthorize(\"hasAnyAuthority('ROLE_MANAGE_")
                 .append(CrudStringUtils.convertCamelToSnake(request.getEntityName()))
-                .append("','ROLE_ADMIN')\")\n");
+                .append("','ROLE_SUPER_ADMIN')\")\n");
         controllerClass.append("    public ResponseEntity<").append(request.getEntityName())
                 .append("> patch(@PathVariable(\"id\")\n");
         controllerClass.append("            @NotBlank(message = \"id is mandatory\") ")
                 .append("String id,\n");
         controllerClass.append("            @RequestBody Map<String, Object> request) {\n");
-        controllerClass.append("        ").append(request.getEntityName()).append(" response = get")
-                .append(request.getEntityName())
-                .append("Service().patch(id, request);\n");
+        controllerClass.append("        ").append(request.getEntityName()).append(" response = ")
+                .append(CrudStringUtils.lowerCaseFirstLetter(request.getEntityName()))
+                .append("Service.patch(id, request);\n");
         controllerClass.append("        return new ResponseEntity<>(response, HttpStatus.OK);\n");
         controllerClass.append("    }\n\n");
     }
@@ -201,11 +200,11 @@ public class ControllerGeneratorService {
         controllerClass.append("    @ResponseStatus(HttpStatus.NO_CONTENT)\n");
         controllerClass.append("    @PreAuthorize(\"hasAnyAuthority('ROLE_MANAGE_")
                 .append(CrudStringUtils.convertCamelToSnake(request.getEntityName()))
-                .append("','ROLE_ADMIN')\")\n");
+                .append("','ROLE_SUPER_ADMIN')\")\n");
         controllerClass.append("    public ResponseEntity<Void> deleteById(@PathVariable(\"id\") \n");
         controllerClass.append("            @NotBlank(message = \"id is mandatory\") String id) {\n");
-        controllerClass.append("        get").append(request.getEntityName())
-                .append("Service().deleteById(id);\n");
+        controllerClass.append("        ").append(CrudStringUtils.lowerCaseFirstLetter(request.getEntityName()))
+                .append("Service.deleteById(id);\n");
         controllerClass.append("        return new ResponseEntity<>(HttpStatus.NO_CONTENT);\n");
         controllerClass.append("    }\n\n");
     }
@@ -237,8 +236,7 @@ public class ControllerGeneratorService {
         controllerClass.append("import jakarta.validation.Valid;\n");
         controllerClass.append("import jakarta.validation.constraints.NotBlank;\n");
         controllerClass.append("import jakarta.validation.constraints.Positive;\n");
-        controllerClass.append("import lombok.AllArgsConstructor;\n");
-        controllerClass.append("import lombok.Getter;\n");
+        controllerClass.append("import lombok.RequiredArgsConstructor;\n");
         controllerClass.append("import org.springframework.data.domain.Page;\n");
         controllerClass.append("import org.springframework.http.HttpStatus;\n");
         controllerClass.append("import org.springframework.http.ResponseEntity;\n");

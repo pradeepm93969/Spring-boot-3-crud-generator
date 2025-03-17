@@ -32,7 +32,6 @@ public class CRUDGenerationRequest {
     @NotBlank
     private String databaseSchema;
 
-    @NotBlank
     private String tablePrefix;
 
     private boolean generateLiquibase = true;
@@ -42,7 +41,6 @@ public class CRUDGenerationRequest {
 
     private boolean generateImportExport = true;
 
-    @NotBlank
     @Pattern(regexp = "^(?:[a-zA-Z_][a-zA-Z0-9_]*\\.)*[a-zA-Z_][a-zA-Z0-9_]*$")
     private String commonPackageName;
 

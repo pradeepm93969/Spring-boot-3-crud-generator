@@ -44,7 +44,7 @@ public class LiquibaseGeneratorService {
                         .append("    CONSTRAINT ").append(CrudStringUtils.convertCamelToSnake(
                                 request.getTablePrefix()
                                         + request.getEntityName()))
-                        .append("_pkey PRIMARY KEY (")
+                        .append("_PKEY PRIMARY KEY (")
                         .append(CrudStringUtils.convertCamelToSnake(e.getName()))
                         .append(")\n"));
 
@@ -65,7 +65,9 @@ public class LiquibaseGeneratorService {
     private void generateIndexes(StringBuilder sqlFile, CRUDGenerationRequest request) {
         for (EntityProperties property : request.getProperties()) {
             if (property.isUnique()) {
-                sqlFile.append("CREATE UNIQUE INDEX idx_")
+                sqlFile.append("CREATE UNIQUE INDEX ")
+                        .append(request.getDatabaseSchema()).append(".")
+                        .append("IDX_")
                         .append(CrudStringUtils.convertCamelToSnake(request.getTablePrefix()
                                 + request.getEntityName()))
                         .append("_").append(CrudStringUtils.convertCamelToSnake(property.getName()))
@@ -78,7 +80,9 @@ public class LiquibaseGeneratorService {
                         .append(CrudStringUtils.convertCamelToSnake(property.getName()))
                         .append(");\n");
             } else if (property.isIndexable()) {
-                sqlFile.append("CREATE INDEX idx_")
+                sqlFile.append("CREATE INDEX ")
+                        .append(request.getDatabaseSchema()).append(".")
+                        .append("IDX_")
                         .append(CrudStringUtils.convertCamelToSnake(request.getTablePrefix()
                                 + request.getEntityName()))
                         .append("_").append(CrudStringUtils.convertCamelToSnake(property.getName()))
