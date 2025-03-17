@@ -22,7 +22,7 @@ public class CRUDGenerationRequest {
     @Pattern(regexp = "^(?:[a-zA-Z_][a-zA-Z0-9_]*\\.)*[a-zA-Z_][a-zA-Z0-9_]*$")
     private String packageName;
 
-    @Pattern(regexp = "^[a-zA-Z_$][a-zA-Z0-9_$]*$")
+    @Pattern(regexp = "^$|[a-zA-Z_$][a-zA-Z0-9_$]*$")
     private String subPackageName;
 
     @NotBlank
@@ -41,7 +41,7 @@ public class CRUDGenerationRequest {
 
     private boolean generateImportExport = true;
 
-    @Pattern(regexp = "^(?:[a-zA-Z_][a-zA-Z0-9_]*\\.)*[a-zA-Z_][a-zA-Z0-9_]*$")
+    @Pattern(regexp = "^$|(?:[a-zA-Z_][a-zA-Z0-9_]*\\.)*[a-zA-Z_][a-zA-Z0-9_]*$")
     private String commonPackageName;
 
     @NotEmpty

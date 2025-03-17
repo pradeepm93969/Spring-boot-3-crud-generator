@@ -358,6 +358,8 @@ public class EntityGeneratorService {
             field.append("\", length = 60");
         } else if (property.getColumnLength() > 0 && property.getColumnLength() != 255) {
             field.append("\", length = ").append(property.getColumnLength());
+        } else {
+            field.append("\",");
         }
         if (property.isRequired() || property.getType().equalsIgnoreCase("MonetaryAmount")) {
             field.append(", nullable = false");

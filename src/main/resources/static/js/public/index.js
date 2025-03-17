@@ -186,6 +186,7 @@ function handleCrudGeneration() {
             unique: block.querySelector('input[name="unique"]').checked,
             indexable: block.querySelector('input[name="indexable"]').checked,
             enumValues: block.querySelector('input[name="enumValues"]').value,
+            columnLength: block.querySelector('input[name="columnLength"]').value,
             pattern: block.querySelector('input[name="pattern"]').value,
             min: block.querySelector('input[name="min"]').value,
             max: block.querySelector('input[name="max"]').value,
