@@ -6,6 +6,8 @@ import com.pradeep.crudgenerator.utils.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+
 @Service
 public class ControllerGeneratorService {
     public void generateController(CRUDGenerationRequest request) {
@@ -47,10 +49,9 @@ public class ControllerGeneratorService {
         controllerClass.append("}");
 
         // Write request class to file
-        String filePath = request.getDirectory() + "\\web\\endpoint"
-                + (StringUtils.isNotBlank(request.getSubPackageName()) ? "\\"
-                + request.getSubPackageName() : "")
-                + "\\" + request.getEntityName() + "Endpoint.java";
+        String filePath = request.getDirectory() + File.separator + "web" + File.separator + "endpoint"
+                + (StringUtils.isNotBlank(request.getSubPackageName()) ? File.separator + request.getSubPackageName() : "")
+                + File.separator + request.getEntityName() + "Endpoint.java";
         FileUtils.writeFile(controllerClass.toString(), filePath);
 
     }

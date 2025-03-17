@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.util.List;
 
 @Service
@@ -51,10 +52,9 @@ public class DomainGeneratorService {
         domainFile.append(domainClass.toString());
 
         // Write request class to file
-        String filePath = request.getDirectory() + "\\domain"
-                + (StringUtils.isNotBlank(request.getSubPackageName()) ? "\\"
-                + request.getSubPackageName() : "")
-                + "\\" + request.getEntityName() + ".java";
+        String filePath = request.getDirectory() + File.separator + "domain"
+                + (StringUtils.isNotBlank(request.getSubPackageName()) ? File.separator + request.getSubPackageName() : "")
+                + File.separator + request.getEntityName() + ".java";
         FileUtils.writeFile(domainFile.toString(), filePath);
     }
 

@@ -5,6 +5,8 @@ import com.pradeep.crudgenerator.utils.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+
 @Service
 public class RepositoryGeneratorService {
 
@@ -28,10 +30,9 @@ public class RepositoryGeneratorService {
         repositoryClass.append("}\n");
 
         // Write request class to file
-        String filePath = request.getDirectory() + "\\jpa\\repository"
-                + (StringUtils.isNotBlank(request.getSubPackageName()) ? "\\"
-                + request.getSubPackageName() : "")
-                + "\\" + request.getEntityName() + "Repository.java";
+        String filePath = request.getDirectory() + File.separator + "jpa" + File.separator + "repository"
+                + (StringUtils.isNotBlank(request.getSubPackageName()) ? File.separator + request.getSubPackageName() : "")
+                + File.separator + request.getEntityName() + "Repository.java";
         FileUtils.writeFile(repositoryClass.toString(), filePath);
 
     }

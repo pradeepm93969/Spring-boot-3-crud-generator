@@ -10,6 +10,7 @@ import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.math.BigDecimal;
 
 @Service
@@ -54,10 +55,9 @@ public class ServiceGeneratorService {
         serviceClass.append("}");
 
         // Write request class to file
-        String filePath = request.getDirectory() + "\\service"
-                + (StringUtils.isNotBlank(request.getSubPackageName()) ? "\\"
-                + request.getSubPackageName() : "")
-                + "\\" + request.getEntityName() + "Service.java";
+        String filePath = request.getDirectory() + File.separator + "service"
+                + (StringUtils.isNotBlank(request.getSubPackageName()) ? File.separator + request.getSubPackageName() : "")
+                + File.separator + request.getEntityName() + "Service.java";
         FileUtils.writeFile(serviceClass.toString(), filePath);
 
     }

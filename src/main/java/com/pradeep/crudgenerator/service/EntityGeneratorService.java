@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -76,10 +77,9 @@ public class EntityGeneratorService {
         entityFile.append(entityClass.toString());
 
         // Write entity class to file
-        String filePath = request.getDirectory() + "\\jpa\\domain"
-                + (StringUtils.isNotBlank(request.getSubPackageName()) ? "\\"
-                + request.getSubPackageName() : "")
-                + "\\Jpa" + request.getEntityName() + ".java";
+        String filePath = request.getDirectory() + File.separator + "jpa" + File.separator + "domain"
+                + (StringUtils.isNotBlank(request.getSubPackageName()) ? File.separator + request.getSubPackageName() : "")
+                + File.separator + "Jpa" + request.getEntityName() + ".java";
         FileUtils.writeFile(entityFile.toString(), filePath);
     }
 
