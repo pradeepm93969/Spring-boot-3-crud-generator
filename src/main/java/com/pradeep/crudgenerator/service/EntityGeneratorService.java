@@ -407,10 +407,10 @@ public class EntityGeneratorService {
     }
 
     private void generateEnumClass(EntityProperties property, CRUDGenerationRequest request) {
-        String filePath = request.getDirectory() + "\\domain"
-                + (StringUtils.isNotBlank(request.getSubPackageName()) ? "\\"
+        String filePath = request.getDirectory() + File.separator + "domain"
+                + (StringUtils.isNotBlank(request.getSubPackageName()) ? File.separator
                 + request.getSubPackageName() : "")
-                + "\\support\\" + CrudStringUtils.capitalizeFirstLetter(property.getName()) + "Enum.java";
+                + File.separator + "support" + File.separator + CrudStringUtils.capitalizeFirstLetter(property.getName()) + "Enum.java";
         StringBuilder enumClassBuilder = new StringBuilder();
         enumClassBuilder.append("package ").append(request.getPackageName()).append(".domain")
                 .append(StringUtils.isNotBlank(request.getSubPackageName()) ? "."
